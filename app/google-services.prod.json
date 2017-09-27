@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "501671044456",
+    "firebase_url": "https://fairshare.firebaseio.com",
+    "project_id": "firebase-fairshare",
+    "storage_bucket": "firebase-fairshare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501671044456:android:86be0272f5dced97",
+        "android_client_info": {
+          "package_name": "share.fair.fairshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501671044456-op2r29i2r73ui00losq1dou1p6lui5ku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAURE5oQfT2ITgfo3gGMZ-qVRlLpH_U5Ek"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
