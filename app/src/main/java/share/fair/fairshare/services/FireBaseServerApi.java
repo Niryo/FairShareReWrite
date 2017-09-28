@@ -1,8 +1,13 @@
 package share.fair.fairshare.services;
 
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +28,19 @@ public class FireBaseServerApi {
 
     public static GroupReference group(String groupKey) {
         return new GroupReference(groupKey);
+    }
+    public static void addGroup(String groupKey) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child(groupKey)
+                .setValue(groupKey)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("custom","puk" + task.isSuccessful());
+                    }
+                });
     }
 
 
