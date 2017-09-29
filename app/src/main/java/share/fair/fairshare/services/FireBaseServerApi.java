@@ -30,11 +30,17 @@ public class FireBaseServerApi {
         return new GroupReference(groupKey);
     }
     public static void addGroup(String groupKey) {
+       String cloudKey = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .push()
+                .getKey();
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child(groupKey)
-                .setValue(groupKey)
+                .child(cloudKey)
+                .child("Actions")
+                .setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
