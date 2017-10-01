@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context="share.fair.fairshare.activities.MainActivity">
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/main_activity_action_bar"
+            android:id="@+id/group_activity_action_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp" />
-
-        <ListView
-            android:id="@+id/main_activity_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
 
     </LinearLayout>
 </layout>
