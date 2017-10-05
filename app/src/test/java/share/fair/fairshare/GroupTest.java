@@ -48,12 +48,20 @@ public class GroupTest {
         assertEquals(this.group.getUsers().get(0), user);
     }
 
+    @Test
+    public void createUser() {
+        this.group.createUser("testUserName");
+        assertEquals(this.group.getUsers().get(0).getName(), "testUserName");
+    }
+
+
 
     @Test
     public void removeUserById() {
-        User user = new User("testId", "testName");
+        User user = new User("testName");
+        String id = user.getId();
         this.group.addUser(user);
-        this.group.removeUserById("testId");
+        this.group.removeUserById(id);
         assertEquals(this.group.getUsers().size(), 0);
     }
 }

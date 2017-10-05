@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">Fair Share</string>
     <string name="main_activity_action_bar_menu_enter_group_key">Enter group key</string>
-    <string name="main_activity_action_bar_menu_send_feedback">Send feedback</string>
-    <string name="main_activity_action_bar_menu_add_group">Add Group</string>
+    <string name="main_activity_action_bar_menu_send_feedback">Feedback</string>
+    <string name="main_activity_action_bar_menu_add_group">Add group</string>
+    <string name="group_activity_action_bar_menu_payment_history">Payment history</string>
+    <string name="group_activity_action_bar_menu_settle_up">Settle Up</string>
+    <string name="group_activity_action_bar_menu_show_group_key">Show group key</string>
+    <string name="group_activity_action_bar_menu_invite">Invite</string>
     <string name="group_name">Group\'s name</string>
+    <string name="name">Name</string>
     <string name="your_name">Your name</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="create_new_group">Create new group</string>
+    <string name="add_user">Add person</string>
 </resources>

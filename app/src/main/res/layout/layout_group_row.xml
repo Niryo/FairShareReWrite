@@ -7,5 +7,5 @@
         android:id="@+id/layout_group_row_group_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textColor="@color/colorPrimary"/>
+        />
 </LinearLayout>

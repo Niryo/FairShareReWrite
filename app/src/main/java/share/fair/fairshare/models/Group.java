@@ -43,6 +43,11 @@ public class Group {
 
     }
 
+    public void createUser(String userName){
+        User newUser = new User(userName);
+        this.users.add(newUser);
+    }
+
     public void removeUserById(String userId) {
         User userToRemove = null;
         for(User user: this.users) {

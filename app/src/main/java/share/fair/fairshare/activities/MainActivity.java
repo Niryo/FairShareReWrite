@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +24,8 @@ import share.fair.fairshare.R;
 import share.fair.fairshare.databinding.ActivityMainBinding;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.GroupList;
+
+import static share.fair.fairshare.activities.GroupActivity.GROUP_ID_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
     private ListView groupsNamesListView;
@@ -73,8 +74,9 @@ public class MainActivity extends AppCompatActivity {
         this.groupsNamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent goToNextActivity = new Intent(getApplicationContext(), GroupActivity.class);
-                startActivity(goToNextActivity);
+                Intent goToGroupActivity = new Intent(getApplicationContext(), GroupActivity.class);
+                goToGroupActivity.putExtra(GROUP_ID_EXTRA, groupList.getGroups().get(i).getId());
+                startActivity(goToGroupActivity);
             }
         });
 
