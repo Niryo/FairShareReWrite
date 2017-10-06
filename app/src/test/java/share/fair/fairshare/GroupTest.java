@@ -64,4 +64,6 @@ public class GroupTest {
         this.group.removeUserById(id);
         assertEquals(this.group.getUsers().size(), 0);
     }
+
+    //find user by id
 }

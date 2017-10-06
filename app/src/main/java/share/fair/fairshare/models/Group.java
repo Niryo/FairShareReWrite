@@ -48,6 +48,15 @@ public class Group {
         this.users.add(newUser);
     }
 
+    public User findUserById(String userId){
+        for(User user: this.users) {
+            if(user.getId() == userId) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public void removeUserById(String userId) {
         User userToRemove = null;
         for(User user: this.users) {

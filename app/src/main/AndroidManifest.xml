@@ -19,8 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.GroupActivity" />
-        <activity android:name=".activities.NewBillActivity"></activity>
+        <activity
+            android:name=".activities.GroupActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.NewBillActivity"
+            android:parentActivityName=".activities.GroupActivity"/>
     </application>
 
 </manifest>

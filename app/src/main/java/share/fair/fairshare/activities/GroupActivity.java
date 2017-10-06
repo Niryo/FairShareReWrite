@@ -2,6 +2,7 @@ package share.fair.fairshare.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,12 +38,30 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityGroupBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_group);
-        setSupportActionBar(binding.groupActivityActionBar);
-        getSupportActionBar().setTitle(group.getName());
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         this.group = ((AppActivity) getApplication()).getGroupList().getGroupById(groupId);
+        binding.groupActivityActionBar.setTitle(group.getName());
+        setSupportActionBar(binding.groupActivityActionBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        binding.groupActivityActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
         this.usersListView = binding.groupActivityUsersList;
         this.usersListView.setAdapter(new UserRowAdapter(this, group.getUsers()));
+        binding.groupActivityFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gotToNewBillActivity = new Intent(getApplicationContext(), NewBillActivity.class);
+                gotToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA ,group.getId());
+                startActivity(gotToNewBillActivity);
+            }
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
