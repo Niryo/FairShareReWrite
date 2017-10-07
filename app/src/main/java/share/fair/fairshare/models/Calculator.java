@@ -1,7 +1,12 @@
 package share.fair.fairshare.models;
 
+import android.util.Log;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by niryo on 04/10/2017.
@@ -9,9 +14,10 @@ import java.util.List;
 
 public class Calculator {
     public static Double EPSILON = 0.0001;
-    public static void CalculateShares(List<BillLine> billLines) throws TotalPaidNotEqualsToTotalShareException, NotEnoughMoneyToPayTheBillException {
+    public static Double CalculateShares(List<BillLine> billLines) throws TotalPaidNotEqualsToTotalShareException, NotEnoughMoneyToPayTheBillException {
         double totalPaid = 0.0;
         double totalShare = 0.0;
+        Map<String,Double> result = new HashMap();
         ArrayList<BillLine> billLinesWithoutShare = new ArrayList<BillLine>(); //a list of users that have no share.
 
         //we calculate the total paid sum and the total share.
@@ -41,9 +47,7 @@ public class Calculator {
             throw new TotalPaidNotEqualsToTotalShareException();
         }
 
-        for(BillLine billLine: billLinesWithoutShare){
-            billLine.share = splitEvenShare;
-        }
+        return splitEvenShare;
     }
 
     public static class TotalPaidNotEqualsToTotalShareException extends Exception {}
@@ -51,7 +55,7 @@ public class Calculator {
 
     public static class BillLine {
         private final String userId;
-        private final Double amountPaid;
+        private Double amountPaid;
         private Double share;
 
         public BillLine(String userId, Double amountPaid, Double share) {
@@ -60,17 +64,22 @@ public class Calculator {
             this.share = share;
         }
 
+        public void setAmountPaid(Double amountPaid) {
+            this.amountPaid = amountPaid;
+        }
+
         public String getUserId() {
             return userId;
         }
-
         public Double getAmountPaid() {
             return amountPaid;
         }
-
         public Double getShare() {
             return share;
         }
 
+        public void setShare(Double share) {
+            this.share = share;
+        }
     }
 }

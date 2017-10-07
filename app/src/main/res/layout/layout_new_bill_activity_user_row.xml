@@ -12,6 +12,7 @@
             android:id="@+id/layout_new_bill_activity_user_row_amount_paid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:maxLines="1"
             android:inputType="text"
             />
@@ -19,6 +20,7 @@
             android:id="@+id/layout_new_bill_activity_user_row_share"
             android:maxLines="1"
             android:inputType="text"
+            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

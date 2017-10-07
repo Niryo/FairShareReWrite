@@ -18,10 +18,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
 import share.fair.fairshare.databinding.ActivityGroupBinding;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
@@ -45,7 +45,11 @@ public class GroupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         binding.groupActivityActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-
+        //todo: delete:
+        group.createUser("a");
+        group.createUser("b");
+        group.createUser("c");
+        //=====================
         this.usersListView = binding.groupActivityUsersList;
         this.usersListView.setAdapter(new UserRowAdapter(this, group.getUsers()));
         binding.groupActivityFloatingActionButton.setOnClickListener(new View.OnClickListener() {

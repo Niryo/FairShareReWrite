@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import share.fair.fairshare.models.Calculator;
 import share.fair.fairshare.models.User;
@@ -25,11 +26,19 @@ public class CalculatorTest {
         billLines.add(billLine1);
         billLines.add(billLine2);
         billLines.add(billLine3);
-        Calculator.CalculateShares(billLines);
+        assertEquals(Calculator.CalculateShares(billLines), 33.333, 0.001);
+    }
 
-        assertEquals(billLine1.getShare(), 33.333, 0.001);
-        assertEquals(billLine2.getShare(), 33.333, 0.001);
-        assertEquals(billLine2.getShare(), 33.333, 0.001);
+    @Test
+    public void noShares2() throws Calculator.TotalPaidNotEqualsToTotalShareException, Calculator.NotEnoughMoneyToPayTheBillException {
+        Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 100.0, null);
+        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 25.0, null);
+        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 25.0, null);
+        List<Calculator.BillLine> billLines = new ArrayList<>();
+        billLines.add(billLine1);
+        billLines.add(billLine2);
+        billLines.add(billLine3);
+        assertEquals(Calculator.CalculateShares(billLines), 50.0, 0.001);
     }
 
     @Test
@@ -41,11 +50,7 @@ public class CalculatorTest {
         billLines.add(billLine1);
         billLines.add(billLine2);
         billLines.add(billLine3);
-        Calculator.CalculateShares(billLines);
-
-        assertEquals(billLine1.getShare(), 50.0, 0.001);
-        assertEquals(billLine2.getShare(), 25.0, 0.001);
-        assertEquals(billLine2.getShare(), 25.0, 0.001);
+        assertEquals(Calculator.CalculateShares(billLines), 25.0, 0.001);
     }
 
     @Test
@@ -57,11 +62,8 @@ public class CalculatorTest {
         billLines.add(billLine1);
         billLines.add(billLine2);
         billLines.add(billLine3);
-        Calculator.CalculateShares(billLines);
 
-        assertEquals(billLine1.getShare(), 50.0, 0.001);
-        assertEquals(billLine2.getShare(), 25.0, 0.001);
-        assertEquals(billLine2.getShare(), 25.0, 0.001);
+        assertEquals(Calculator.CalculateShares(billLines), 25.0, 0.001);
     }
 
     @Test(expected = Calculator.TotalPaidNotEqualsToTotalShareException.class)

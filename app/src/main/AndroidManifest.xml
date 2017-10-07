@@ -23,7 +23,7 @@
             android:name=".activities.GroupActivity"
             android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".activities.NewBillActivity"
+            android:name=".activities.NewBillActivity.NewBillActivity"
             android:parentActivityName=".activities.GroupActivity"/>
     </application>
 

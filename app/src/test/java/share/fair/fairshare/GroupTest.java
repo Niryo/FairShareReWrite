@@ -65,5 +65,11 @@ public class GroupTest {
         assertEquals(this.group.getUsers().size(), 0);
     }
 
-    //find user by id
+    @Test
+    public void findUserById() {
+        User user = new User("testName");
+        String id = user.getId();
+        this.group.addUser(user);
+        assertEquals(this.group.findUserById(id).getName(), "testName");
+    }
 }
