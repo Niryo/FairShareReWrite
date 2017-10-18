@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -41,6 +42,7 @@ public class GroupActivity extends AppCompatActivity {
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         this.group = ((AppActivity) getApplication()).getGroupList().getGroupById(groupId);
         binding.groupActivityActionBar.setTitle(group.getName());
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         setSupportActionBar(binding.groupActivityActionBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -119,7 +121,7 @@ public class GroupActivity extends AppCompatActivity {
             TextView userNameText = convertView.findViewById(R.id.layout_group_activity_user_row_user_name);
             TextView userBallanceText = convertView.findViewById(R.id.layout_group_activity_user_row_user_ballance);
             userNameText.setText(users.get(position).getName());
-            userBallanceText.setText(users.get(position).getBallance().toString());
+            userBallanceText.setText(Double.toString(users.get(position).getBallance()));
             return convertView;
         }
     }

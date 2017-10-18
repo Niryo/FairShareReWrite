@@ -25,7 +25,7 @@ public class Calculator {
 
         for (BillLine billLine : billLines) {
             totalPaid += billLine.amountPaid;
-            if (billLine.share == null) {
+            if (Double.isNaN(billLine.share)) {
                 billLinesWithoutShare.add(billLine);
             } else {
                 totalShare += billLine.share;
@@ -55,8 +55,8 @@ public class Calculator {
 
     public static class BillLine {
         private final String userId;
-        private Double amountPaid;
-        private Double share;
+        private double amountPaid;
+        private double share;
 
         public BillLine(String userId, Double amountPaid, Double share) {
             this.userId = userId;

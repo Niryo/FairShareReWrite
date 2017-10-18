@@ -13,6 +13,7 @@ public class Group {
     private String name;
     private String id;
     private List<User> users = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
 
 
     public Group(String name) {
@@ -29,6 +30,14 @@ public class Group {
         return id;
     }
 
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void addAction(Action action) {
+        this.actions.add(action);
+        this.applyAction(action);
+    }
 
     public String getName() {
         return name;
@@ -50,7 +59,7 @@ public class Group {
 
     public User findUserById(String userId){
         for(User user: this.users) {
-            if(user.getId() == userId) {
+            if(user.getId().equals(userId)) {
                 return user;
             }
         }
@@ -60,10 +69,17 @@ public class Group {
     public void removeUserById(String userId) {
         User userToRemove = null;
         for(User user: this.users) {
-            if(user.getId() == userId) {
+            if(user.getId().equals(userId)) {
                 userToRemove = user;
             }
         }
         this.users.remove(userToRemove);
+    }
+
+    private void applyAction(Action action) {
+        for(Action.Operation operation : action.getOperations()) {
+            User user = this.findUserById(operation.getUserId());
+            user.setBallance(user.getBallance() + operation.getAmountPaid() - operation.getShare());
+        }
     }
 }

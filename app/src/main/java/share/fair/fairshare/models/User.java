@@ -10,7 +10,11 @@ import java.security.SecureRandom;
 public class User {
     private String id;
     private String name;
-    private Double ballance;
+    private double ballance;
+
+    public void setBallance(double ballance) {
+        this.ballance = ballance;
+    }
 
     public User(String id, String name, Double ballance) {
         this.id = id;
@@ -31,7 +35,7 @@ public class User {
         return id;
     }
 
-    public Double getBallance() {
+    public double getBallance() {
         return ballance;
     }
 

@@ -3,6 +3,10 @@ package share.fair.fairshare;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
 
@@ -71,5 +75,18 @@ public class GroupTest {
         String id = user.getId();
         this.group.addUser(user);
         assertEquals(this.group.findUserById(id).getName(), "testName");
+    }
+
+    @Test
+    public void addAction() {
+        User user1 = new User("testName");
+        User user2 = new User("testName2");
+        group.addUser(user1);
+        group.addUser(user2);
+        List<Action.Operation> operations = new ArrayList<>();
+        operations.add(new Action.Operation(user1.getId(), 50.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
+        group.addAction(new Action(operations, "bla", "description", true));
+        assertEquals(user1.getBallance(), 50.0, 0.001);
     }
 }

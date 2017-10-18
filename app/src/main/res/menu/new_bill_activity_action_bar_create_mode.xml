@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/new_bill_activity_action_bar_create_mode_done"
+        android:icon="@drawable/ic_done_white_24dp"
+        android:title="@string/new_bill_activity_action_bar_create_mode_done"
+        app:showAsAction="always" />
+</menu>

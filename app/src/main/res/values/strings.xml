@@ -7,6 +7,7 @@
     <string name="group_activity_action_bar_menu_settle_up">Settle Up</string>
     <string name="group_activity_action_bar_menu_show_group_key">Show group key</string>
     <string name="group_activity_action_bar_menu_invite">Invite</string>
+    <string name="new_bill_activity_action_bar_create_mode_done">Done</string>
     <string name="new_bill_activity_action_bar_title">Create new bill</string>
     <string name="new_bill_activity_bill_title">Enter bill title</string>
     <string name="group_name">Group\'s name</string>
@@ -16,4 +17,8 @@
     <string name="create">Create</string>
     <string name="create_new_group">Create new group</string>
     <string name="add_user">Add person</string>
+    <string name="paid">Paid</string>
+    <string name="share">Share</string>
+    <string name="new_bill_default_paid_hint">0.0</string>
+    <string name="new_bill_default_share_hint">0.0</string>
 </resources>

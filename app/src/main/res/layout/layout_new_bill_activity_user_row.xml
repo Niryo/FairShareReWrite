@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.constraint.ConstraintLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/layout_new_bill_activity_user_row_user_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="tessssssst"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
         <EditText
             android:id="@+id/layout_new_bill_activity_user_row_amount_paid"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/new_bill_activity_amount_paid_col_size"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:maxLines="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/new_bill_default_paid_hint"
             android:inputType="text"
-            />
+            app:layout_constraintRight_toLeftOf="@+id/layout_new_bill_activity_user_row_share"
+            app:layout_constraintTop_toTopOf="parent"
+             />
         <EditText
             android:id="@+id/layout_new_bill_activity_user_row_share"
             android:maxLines="1"
             android:inputType="text"
             android:focusable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:background="@android:color/transparent"
+            android:hint="@string/new_bill_default_share_hint"
+            android:layout_width="@dimen/new_bill_activity_amount_paid_col_size"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
 </layout>
