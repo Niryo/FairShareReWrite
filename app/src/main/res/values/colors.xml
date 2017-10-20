@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#00BCD4</color>
     <color name="colorAccent">#4FC3F7</color>
     <color name="actionBarTitleTextColor">#FFFF</color>
+    <color name="disabledTextColor">#a7ffffff</color>
 </resources>

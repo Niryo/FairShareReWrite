@@ -1,6 +1,5 @@
 package share.fair.fairshare.activities.NewBillActivity;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
-import share.fair.fairshare.activities.GroupActivity;
 import share.fair.fairshare.databinding.ActivityNewBillBinding;
 import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Calculator;

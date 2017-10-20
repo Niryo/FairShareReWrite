@@ -21,11 +21,12 @@ import android.widget.TextView;
 import java.util.List;
 
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.GroupActivity.GroupActivity;
 import share.fair.fairshare.databinding.ActivityMainBinding;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.GroupList;
 
-import static share.fair.fairshare.activities.GroupActivity.GROUP_ID_EXTRA;
+import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_ID_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
     private ListView groupsNamesListView;

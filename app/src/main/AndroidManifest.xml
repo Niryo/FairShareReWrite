@@ -20,11 +20,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.GroupActivity"
+            android:name=".activities.GroupActivity.GroupActivity"
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.NewBillActivity.NewBillActivity"
-            android:parentActivityName=".activities.GroupActivity"/>
+            android:parentActivityName=".activities.GroupActivity.GroupActivity"/>
     </application>
 
 </manifest>

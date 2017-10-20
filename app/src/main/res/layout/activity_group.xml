@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/group_activity_action_bar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:elevation="4dp" />
+            android:layout_height="wrap_content">
 
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/group_activity_coordinator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:id="@+id/group_activity_users_list"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/group_activity_action_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/group_activity_floating_action_button"
-                android:layout_width="wrap_content"
+            <android.support.design.widget.TabLayout
+                android:id="@+id/group_activity_tabs"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_invoice"
-                android:clickable="true"
-                app:layout_anchor="@id/group_activity_users_list"
-                app:layout_anchorGravity="bottom|right|end" />
-        </android.support.design.widget.CoordinatorLayout>
+                android:background="@color/colorPrimary"
+                app:tabIndicatorColor="@color/actionBarTitleTextColor"
+                app:tabSelectedTextColor="@color/actionBarTitleTextColor"
+                app:tabTextColor="@color/disabledTextColor"
+
+                app:tabGravity="fill"
+                app:tabMode="fixed" />
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/group_activity_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </LinearLayout>
 </layout>

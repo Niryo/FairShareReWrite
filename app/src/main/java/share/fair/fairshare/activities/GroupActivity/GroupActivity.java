@@ -1,4 +1,4 @@
-package share.fair.fairshare.activities;
+package share.fair.fairshare.activities.GroupActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +24,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.AppActivity;
+import share.fair.fairshare.activities.GroupDetailsFragment;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
 import share.fair.fairshare.databinding.ActivityGroupBinding;
 import share.fair.fairshare.models.Group;
@@ -34,7 +42,8 @@ import share.fair.fairshare.models.User;
 public class GroupActivity extends AppCompatActivity {
     public static final String GROUP_ID_EXTRA = "GROUP_ID_EXTRA";
     private Group group;
-    private ListView usersListView;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +51,6 @@ public class GroupActivity extends AppCompatActivity {
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         this.group = ((AppActivity) getApplication()).getGroupList().getGroupById(groupId);
         binding.groupActivityActionBar.setTitle(group.getName());
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         setSupportActionBar(binding.groupActivityActionBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -52,16 +60,25 @@ public class GroupActivity extends AppCompatActivity {
         group.createUser("b");
         group.createUser("c");
         //=====================
-        this.usersListView = binding.groupActivityUsersList;
-        this.usersListView.setAdapter(new UserRowAdapter(this, group.getUsers()));
-        binding.groupActivityFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotToNewBillActivity = new Intent(getApplicationContext(), NewBillActivity.class);
-                gotToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA ,group.getId());
-                startActivity(gotToNewBillActivity);
-            }
-        });
+        viewPager = (ViewPager) findViewById(R.id.group_activity_viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.group_activity_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        GroupActivityViewPager adapter = new GroupActivityViewPager(getSupportFragmentManager());
+        Bundle args = new Bundle();
+        String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
+        args.putString("groupId", groupId);
+        Fragment groupDetailsFragment = new GroupDetailsFragment();
+        groupDetailsFragment.setArguments(args);
+        Fragment two = new GroupDetailsFragment();
+        two.setArguments(args);
+        adapter.addFragment(groupDetailsFragment, getResources().getString(R.string.group_activity_tabs_group_details));
+        adapter.addFragment(two, "GROUP_DETAILS_FRAGMENT2");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -99,30 +116,9 @@ public class GroupActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         EditText userName = dialogContent.findViewById(R.id.dialog_create_new_user_username);
                         group.createUser(userName.getText().toString());
-                        ((BaseAdapter) usersListView.getAdapter()).notifyDataSetChanged();
+//                        ((BaseAdapter) usersListView.getAdapter()).notifyDataSetChanged();
                     }
                 }).create().show();
 
-    }
-
-    private class UserRowAdapter extends ArrayAdapter<List<User>> {
-        private final List<User> users;
-
-        public UserRowAdapter(Context context, List users) {
-            super(context, -1, users);
-            this.users = users;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = getLayoutInflater().inflate(R.layout.layout_group_activity_user_row, null);
-            }
-            TextView userNameText = convertView.findViewById(R.id.layout_group_activity_user_row_user_name);
-            TextView userBallanceText = convertView.findViewById(R.id.layout_group_activity_user_row_user_ballance);
-            userNameText.setText(users.get(position).getName());
-            userBallanceText.setText(Double.toString(users.get(position).getBallance()));
-            return convertView;
-        }
     }
 }
