@@ -50,8 +50,7 @@ public class GroupActivityTest {
 
     @Test
     public void createNewGroup() {
-        onView(withId(R.id.main_activity_action_bar_add_group))
-                .perform(click());
+        onView(withId(R.id.main_activity_action_bar_add_group)).perform(click());
         onView(withId(R.id.dialog_create_new_group_groupname)).perform(typeText("testGroupName"));
         onView(withId(R.id.dialog_create_new_group_yourname)).perform(typeText("someName"));
         onView(withText(R.string.create)).perform(click());
@@ -59,5 +58,9 @@ public class GroupActivityTest {
         onView(withText("testGroupName")).check(matches(isDisplayed()));
     }
 
-
+//should contain groupDetailsTab
+// should contain paymentHistoryTab
+//payment history tab should contain list of actions with description, time,
+//payment history tab should show latest actions first,
+//payment history tab should open the newBillActivity in edit mode
 }

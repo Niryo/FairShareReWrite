@@ -8,6 +8,7 @@
     <string name="group_activity_action_bar_menu_show_group_key">Show group key</string>
     <string name="group_activity_action_bar_menu_invite">Invite</string>
     <string name="group_activity_tabs_group_details">Group details</string>
+    <string name="group_activity_tabs_group_actions_history">Payments history</string>
     <string name="new_bill_activity_action_bar_create_mode_done">Done</string>
     <string name="new_bill_activity_action_bar_title">Create new bill</string>
     <string name="new_bill_activity_bill_title">Enter bill title</string>

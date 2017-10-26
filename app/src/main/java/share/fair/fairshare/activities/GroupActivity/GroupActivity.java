@@ -27,6 +27,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import share.fair.fairshare.GroupActionsHistory.GroupActionsHistoryFragment;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.activities.GroupDetailsFragment;
@@ -44,6 +45,7 @@ public class GroupActivity extends AppCompatActivity {
     private Group group;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private GroupDetailsFragment groupDetailsFragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,12 +74,11 @@ public class GroupActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         args.putString("groupId", groupId);
-        Fragment groupDetailsFragment = new GroupDetailsFragment();
+        this.groupDetailsFragment = new GroupDetailsFragment();
         groupDetailsFragment.setArguments(args);
-        Fragment two = new GroupDetailsFragment();
-        two.setArguments(args);
+        Fragment groupActionsHistoryFragment =  GroupActionsHistoryFragment.CreateInstance(this.group);
         adapter.addFragment(groupDetailsFragment, getResources().getString(R.string.group_activity_tabs_group_details));
-        adapter.addFragment(two, "GROUP_DETAILS_FRAGMENT2");
+        adapter.addFragment(groupActionsHistoryFragment, getResources().getString(R.string.group_activity_tabs_group_actions_history));
         viewPager.setAdapter(adapter);
     }
 
@@ -117,6 +118,7 @@ public class GroupActivity extends AppCompatActivity {
                         EditText userName = dialogContent.findViewById(R.id.dialog_create_new_user_username);
                         group.createUser(userName.getText().toString());
 //                        ((BaseAdapter) usersListView.getAdapter()).notifyDataSetChanged();
+                        groupDetailsFragment.notifyAdapterChange();
                     }
                 }).create().show();
 

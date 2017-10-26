@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +20,7 @@ import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
 
-public class GroupDetailsFragment extends Fragment {
+public class GroupDetailsFragment extends ListFragment {
     private ListView usersListView;
     private Group group;
 
@@ -30,15 +32,17 @@ public class GroupDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         String groupId = this.getArguments().getString("groupId");
         this.group = ((AppActivity) getActivity().getApplication()).getGroupList().getGroupById(groupId);
+        setListAdapter(new UserRowAdapter(getContext(), this.group.getUsers()));
+    }
+
+    public void notifyAdapterChange() {
+        ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_group_details, container, false);
-
-        this.usersListView = view.findViewById(R.id.group_activity_users_list);
-        this.usersListView.setAdapter(new UserRowAdapter(getContext(), this.group.getUsers()));
         view.findViewById(R.id.group_activity_floating_action_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

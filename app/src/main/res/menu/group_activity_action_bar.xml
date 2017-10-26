@@ -6,10 +6,6 @@
         android:icon="@drawable/ic_person_add_white_24dp"
         android:title="@string/add_user"
         app:showAsAction="always"/>
-    <item
-        android:title="@string/group_activity_action_bar_menu_payment_history"
-        android:icon="@drawable/ic_history_white_24dp"
-        app:showAsAction="always"/>
 
     <item
         android:title="@string/group_activity_action_bar_menu_settle_up"
