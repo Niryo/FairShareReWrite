@@ -1,40 +1,25 @@
 package share.fair.fairshare.activities.GroupActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import share.fair.fairshare.GroupActionsHistory.GroupActionsHistoryFragment;
+import share.fair.fairshare.views.GroupActionsHistoryView.GroupActionsHistoryView;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
-import share.fair.fairshare.activities.GroupDetailsFragment;
-import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
+import share.fair.fairshare.views.GroupDetailsView.GroupDetailsView;
 import share.fair.fairshare.databinding.ActivityGroupBinding;
 import share.fair.fairshare.models.Group;
-import share.fair.fairshare.models.User;
 
 /**
  * Created by niryo on 01/10/2017.
@@ -45,7 +30,7 @@ public class GroupActivity extends AppCompatActivity {
     private Group group;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private GroupDetailsFragment groupDetailsFragment;
+    private GroupDetailsView groupDetailsView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,15 +55,14 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        GroupActivityViewPager adapter = new GroupActivityViewPager(getSupportFragmentManager());
+        GroupActivityViewPager adapter = new GroupActivityViewPager(getBaseContext());
         Bundle args = new Bundle();
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         args.putString("groupId", groupId);
-        this.groupDetailsFragment = new GroupDetailsFragment();
-        groupDetailsFragment.setArguments(args);
-        Fragment groupActionsHistoryFragment =  GroupActionsHistoryFragment.CreateInstance(this.group);
-        adapter.addFragment(groupDetailsFragment, getResources().getString(R.string.group_activity_tabs_group_details));
-        adapter.addFragment(groupActionsHistoryFragment, getResources().getString(R.string.group_activity_tabs_group_actions_history));
+        this.groupDetailsView = new GroupDetailsView(getBaseContext(), this.group);
+        GroupActionsHistoryView groupActionsHistoryView =  new GroupActionsHistoryView(this.getBaseContext(), this.group);
+        adapter.addView(groupDetailsView, getResources().getString(R.string.group_activity_tabs_group_details));
+        adapter.addView(groupActionsHistoryView, getResources().getString(R.string.group_activity_tabs_group_actions_history));
         viewPager.setAdapter(adapter);
     }
 
@@ -118,7 +102,7 @@ public class GroupActivity extends AppCompatActivity {
                         EditText userName = dialogContent.findViewById(R.id.dialog_create_new_user_username);
                         group.createUser(userName.getText().toString());
 //                        ((BaseAdapter) usersListView.getAdapter()).notifyDataSetChanged();
-                        groupDetailsFragment.notifyAdapterChange();
+                        groupDetailsView.notifyAdapterChange();
                     }
                 }).create().show();
 
