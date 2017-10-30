@@ -1,6 +1,7 @@
 package share.fair.fairshare.views.GroupActionsHistoryView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
 import share.fair.fairshare.models.Group;
 
 
@@ -30,6 +32,10 @@ public class GroupActionsHistoryView extends LinearLayout {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("custom", group.getActions().get(i).getDescription());
+                Intent intent = new Intent(getContext(), NewBillActivity.class);
+                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, group.getActions().get(i).getId());
+                intent.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());
+                getContext().startActivity(intent);
             }
         });
     }

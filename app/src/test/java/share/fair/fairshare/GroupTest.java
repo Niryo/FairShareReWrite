@@ -89,4 +89,24 @@ public class GroupTest {
         group.addAction(new Action(operations, "bla", "description", true));
         assertEquals(user1.getBallance(), 50.0, 0.001);
     }
+
+    @Test
+    public void getAllActions() {
+
+    }
+
+    @Test
+    public void getActionById() {
+        //todo: refactor after adding a create actio with id
+        User user1 = new User("testName");
+        User user2 = new User("testName2");
+        group.addUser(user1);
+        group.addUser(user2);
+        List<Action.Operation> operations = new ArrayList<>();
+        operations.add(new Action.Operation(user1.getId(), 50.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
+        Action action = new Action(operations, "bla", "description", true);
+        group.addAction(action);
+        assertEquals(group.getActionById(action.getId()), action);
+    }
 }

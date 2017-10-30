@@ -7,9 +7,14 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
 import share.fair.fairshare.models.Group;
+import share.fair.fairshare.models.User;
 
 public class GroupDetailsView extends LinearLayout {
     private ListView usersListView;
@@ -26,6 +31,11 @@ public class GroupDetailsView extends LinearLayout {
             public void onClick(View view) {
                 Intent gotToNewBillActivity = new Intent(getContext(), NewBillActivity.class);
                 gotToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());
+                ArrayList userIdsListExtra = new ArrayList<>();
+                for(User user: group.getUsers()) {
+                    userIdsListExtra.add(user.getId());
+                }
+                gotToNewBillActivity.putStringArrayListExtra(NewBillActivity.USER_IDS_LIST_EXTRA, userIdsListExtra);
                 context.startActivity(gotToNewBillActivity);
             }
         });

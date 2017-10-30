@@ -63,4 +63,5 @@ public class GroupActivityTest {
 //payment history tab should contain list of actions with description, time,
 //payment history tab should show latest actions first,
 //payment history tab should open the newBillActivity in edit mode
+
 }

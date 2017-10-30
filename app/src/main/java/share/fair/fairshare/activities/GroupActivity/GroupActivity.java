@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -55,7 +54,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        GroupActivityViewPager adapter = new GroupActivityViewPager(getBaseContext());
+        GroupActivityPagerAdapter adapter = new GroupActivityPagerAdapter(getBaseContext());
         Bundle args = new Bundle();
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         args.putString("groupId", groupId);

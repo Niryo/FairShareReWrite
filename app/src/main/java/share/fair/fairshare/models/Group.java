@@ -82,4 +82,13 @@ public class Group {
             user.setBallance(user.getBallance() + operation.getAmountPaid() - operation.getShare());
         }
     }
+
+    public Action getActionById(String id) {
+        for(Action action: this.getActions()) {
+            if(action.getId().equals(id)) {
+                return action;
+            }
+        }
+        return null;
+    }
 }
