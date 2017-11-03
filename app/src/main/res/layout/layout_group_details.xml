@@ -24,6 +24,21 @@
             android:clickable="true"
             app:layout_anchor="@id/group_activity_list"
             app:layout_anchorGravity="bottom|right|end" />
+        <TextView
+            android:id="@+id/group_activity_person_count_badge"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/shape_red_circle"
+            android:text="1"
+            android:textColor="@color/actionBarTitleTextColor"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="475dp"
+            app:layout_anchor="@id/group_activity_floating_action_button"
+            app:layout_anchorGravity="right"
+            android:elevation="20dp"
+            android:visibility="invisible"
+            />
     </android.support.design.widget.CoordinatorLayout>
 
 </merge>

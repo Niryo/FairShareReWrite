@@ -63,5 +63,6 @@ public class GroupActivityTest {
 //payment history tab should contain list of actions with description, time,
 //payment history tab should show latest actions first,
 //payment history tab should open the newBillActivity in edit mode
-
+//group tab should show in the action button how many people selected, if there are more than 1 selected
+//group tab should not show selected counter badge if no one is selected
 }

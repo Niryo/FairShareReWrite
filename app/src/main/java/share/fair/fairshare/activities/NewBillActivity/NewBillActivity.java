@@ -54,8 +54,14 @@ public class NewBillActivity extends AppCompatActivity {
         for (Action.Operation operation : action.getOperations()) {
             String userId = operation.getUserId();
             String userName = group.findUserById(userId).getName();
-            String amountPaid = Double.toString(operation.getAmountPaid());
-            String share = Double.toString(operation.getShare());
+            String amountPaid = "";
+            if(operation.getAmountPaid() != 0.0){
+                amountPaid = Double.toString(operation.getAmountPaid());
+            }
+            String share = "";
+            if(!operation.isShareAutoCalculated()) {
+               share = Double.toString(operation.getShare());
+            }
             usersInvolvedInBill.add(new UserInvolvedInBill(userId, userName, amountPaid, share));
         }
         return usersInvolvedInBill;
@@ -137,6 +143,7 @@ public class NewBillActivity extends AppCompatActivity {
             rowViewHolder.share.addTextChangedListener(new TextChangeListener());
             billRows.add(rowViewHolder);
             this.binding.newBillActivityList.addView(inflatedRow);
+            updateShares();
         }
     }
 

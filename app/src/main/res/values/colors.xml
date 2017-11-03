@@ -5,4 +5,5 @@
     <color name="colorAccent">#4FC3F7</color>
     <color name="actionBarTitleTextColor">#FFFF</color>
     <color name="disabledTextColor">#a7ffffff</color>
+    <color name="redNotificationBadge">#FC0F1D</color>
 </resources>

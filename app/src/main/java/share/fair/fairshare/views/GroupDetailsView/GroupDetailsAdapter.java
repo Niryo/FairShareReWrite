@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.List;
@@ -19,17 +20,32 @@ import share.fair.fairshare.models.User;
 public class GroupDetailsAdapter extends ArrayAdapter<List<User>> {
     private final List<User> users;
     private final Context context;
+    private final GroupDetailsView groupDetailsView;
 
-    public GroupDetailsAdapter(Context context, List users) {
+    public GroupDetailsAdapter(Context context,GroupDetailsView parent, List users) {
         super(context, -1, users);
         this.users = users;
         this.context = context;
+        this.groupDetailsView = parent;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_group_activity_user_row, null);
+            CheckBox checkBox = convertView.findViewById(R.id.layout_group_activity_user_checkbox);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(((CheckBox) view).isChecked()) {
+                        groupDetailsView.addSelectedPerson(users.get(position));
+
+                    } else {
+                        groupDetailsView.removeSelectedPerson(users.get(position));
+                    }
+
+                }
+            });
         }
         TextView userNameText = convertView.findViewById(R.id.layout_group_activity_user_row_user_name);
         TextView userBallanceText = convertView.findViewById(R.id.layout_group_activity_user_row_user_ballance);
@@ -37,4 +53,6 @@ public class GroupDetailsAdapter extends ArrayAdapter<List<User>> {
         userBallanceText.setText(Double.toString(users.get(position).getBallance()));
         return convertView;
     }
+
+
 }
