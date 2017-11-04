@@ -19,9 +19,9 @@ import static org.junit.Assert.assertNotEquals;
 public class CalculatorTest {
     @Test
     public void noShares() throws Calculator.TotalPaidNotEqualsToTotalShareException, Calculator.NotEnoughMoneyToPayTheBillException {
-        Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 100.0, null);
-        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 0.0, null);
-        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 0.0, null);
+        Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 100.0, Double.NaN);
+        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 0.0,  Double.NaN);
+        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 0.0,  Double.NaN);
         List<Calculator.BillLine> billLines = new ArrayList<>();
         billLines.add(billLine1);
         billLines.add(billLine2);
@@ -31,9 +31,9 @@ public class CalculatorTest {
 
     @Test
     public void noShares2() throws Calculator.TotalPaidNotEqualsToTotalShareException, Calculator.NotEnoughMoneyToPayTheBillException {
-        Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 100.0, null);
-        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 25.0, null);
-        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 25.0, null);
+        Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 100.0,  Double.NaN);
+        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 25.0,  Double.NaN);
+        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 25.0,  Double.NaN);
         List<Calculator.BillLine> billLines = new ArrayList<>();
         billLines.add(billLine1);
         billLines.add(billLine2);
@@ -44,8 +44,8 @@ public class CalculatorTest {
     @Test
     public void withShare() throws Calculator.TotalPaidNotEqualsToTotalShareException, Calculator.NotEnoughMoneyToPayTheBillException {
         Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 100.0, 50.0);
-        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 0.0, null);
-        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 0.0, null);
+        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 0.0,  Double.NaN);
+        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 0.0,  Double.NaN);
         List<Calculator.BillLine> billLines = new ArrayList<>();
         billLines.add(billLine1);
         billLines.add(billLine2);
@@ -56,8 +56,8 @@ public class CalculatorTest {
     @Test
     public void withShare2() throws Calculator.TotalPaidNotEqualsToTotalShareException, Calculator.NotEnoughMoneyToPayTheBillException {
         Calculator.BillLine billLine1 = new Calculator.BillLine("user1", 0.0, 50.0);
-        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 100.0, null);
-        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 0.0, null);
+        Calculator.BillLine billLine2 = new Calculator.BillLine("user2", 100.0,  Double.NaN);
+        Calculator.BillLine billLine3 = new Calculator.BillLine("user3", 0.0,  Double.NaN);
         List<Calculator.BillLine> billLines = new ArrayList<>();
         billLines.add(billLine1);
         billLines.add(billLine2);

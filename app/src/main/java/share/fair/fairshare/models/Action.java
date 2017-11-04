@@ -22,6 +22,11 @@ public class Action {
     private String description;
     private String creatorName;
     private String id;
+
+    public void makeActionUnEditale() {
+        isEditable = false;
+    }
+
     private boolean isEditable;
 
     public String getId() {
@@ -38,6 +43,14 @@ public class Action {
 
     public List<Operation> getOperations() {
         return operations;
+    }
+
+    public Action getOpositeAction() {
+        List<Action.Operation> oppositeOperations = new ArrayList<>();
+        for(Action.Operation operation: this.operations){
+            oppositeOperations.add(operation.getOppositeOperation());
+        }
+        return new Action(oppositeOperations, creatorName,description +" (cancelled)",false);
     }
 
     public long getTimeCreated() {
@@ -79,6 +92,9 @@ public class Action {
             this.isShareAutoCalculated = isShareAutoCalculated;
         }
 
+        public Operation getOppositeOperation() {
+            return new Operation(userId, -amountPaid, -share , false);
+        }
         public String getUserId() {
             return userId;
         }
@@ -90,5 +106,6 @@ public class Action {
         public double getShare() {
             return share;
         }
+
     }
 }

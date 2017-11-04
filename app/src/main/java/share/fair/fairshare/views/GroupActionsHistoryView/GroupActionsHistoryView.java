@@ -11,8 +11,11 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.util.List;
+
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
+import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Group;
 
 
@@ -31,9 +34,9 @@ public class GroupActionsHistoryView extends LinearLayout {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("custom", group.getActions().get(i).getDescription());
+                Log.d("custom", ((Action)adapterView.getItemAtPosition(i)).getDescription());
                 Intent intent = new Intent(getContext(), NewBillActivity.class);
-                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, group.getActions().get(i).getId());
+                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, ((Action)adapterView.getItemAtPosition(i)).getId());
                 intent.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());
                 getContext().startActivity(intent);
             }

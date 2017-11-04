@@ -1,5 +1,6 @@
 package share.fair.fairshare.views.GroupDetailsView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -40,11 +41,19 @@ public class GroupDetailsView extends LinearLayout {
                 Intent gotToNewBillActivity = new Intent(getContext(), NewBillActivity.class);
                 gotToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());
                 ArrayList userIdsListExtra = new ArrayList<>();
-                for (User user : group.getUsers()) {
-                    userIdsListExtra.add(user.getId());
+                if(selectedUsers.size() == 0){
+                    for (User user : group.getUsers()) {
+                        userIdsListExtra.add(user.getId());
+                    }
+                } else {
+                    for (User user : selectedUsers) {
+                        userIdsListExtra.add(user.getId());
+                    }
                 }
+
                 gotToNewBillActivity.putStringArrayListExtra(NewBillActivity.USER_IDS_LIST_EXTRA, userIdsListExtra);
                 context.startActivity(gotToNewBillActivity);
+
             }
         });
         shakeAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);

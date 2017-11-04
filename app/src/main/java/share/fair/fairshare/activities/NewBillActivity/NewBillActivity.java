@@ -1,5 +1,6 @@
 package share.fair.fairshare.activities.NewBillActivity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +15,14 @@ import java.util.List;
 
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
+import share.fair.fairshare.activities.GroupActivity.GroupActivity;
 import share.fair.fairshare.databinding.ActivityNewBillBinding;
 import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Calculator;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
+
+import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_ID_EXTRA;
 
 public class NewBillActivity extends AppCompatActivity {
     public static final String USER_IDS_LIST_EXTRA = "USER_IDS_LIST_EXTRA";
@@ -30,6 +34,7 @@ public class NewBillActivity extends AppCompatActivity {
     private ActivityNewBillBinding binding;
     private double autoShare = 0.0;
     private boolean isEditMode = false;
+    private Action actionToEdit = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +44,8 @@ public class NewBillActivity extends AppCompatActivity {
         this.binding.newBillActivityBlockTouchOverlay.requestFocus();
         String actionIdToEdit = getIntent().getStringExtra(ACTION_TO_EDIT_ID);
         if (actionIdToEdit != null) {
-            Action action = this.group.getActionById(actionIdToEdit);
-            binding.newBillActivityBillDescription.setText(action.getDescription());
+            actionToEdit = this.group.getActionById(actionIdToEdit);
+            binding.newBillActivityBillDescription.setText(actionToEdit.getDescription());
             createRows(getUsersInvolvedInBillFromAction(this.group.getActionById(actionIdToEdit)));
         } else {
             createRows(getUsersInvolvedInBillFromIntent());
@@ -148,6 +153,10 @@ public class NewBillActivity extends AppCompatActivity {
     }
 
     private void createBill() {
+        if((actionToEdit!= null)){
+            group.cancelAction(actionToEdit);
+        }
+
         List<Action.Operation> operations = new ArrayList<>();
         for (NewBillRowViewHolder viewHolder : this.billRows) {
             double amountPaid = this.readAmountPaid(viewHolder);
@@ -186,7 +195,11 @@ public class NewBillActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.new_bill_activity_action_bar_done:
                 this.createBill();
+                Intent intent = new Intent(this, GroupActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra(GROUP_ID_EXTRA, group.getId());
                 finish();
+                getBaseContext().startActivity(intent);
                 return true;
 
             case R.id.new_bill_activity_action_bar_edit:

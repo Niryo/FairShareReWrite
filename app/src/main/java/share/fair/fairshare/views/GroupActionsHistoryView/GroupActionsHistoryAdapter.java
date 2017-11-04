@@ -27,6 +27,13 @@ public class GroupActionsHistoryAdapter extends ArrayAdapter<Action> {
     }
 
     @Override
+    public Action getItem(int position) {
+        return super.getItem(getCount() -1 -position);
+    }
+
+
+
+    @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if(convertView == null) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -34,11 +41,11 @@ public class GroupActionsHistoryAdapter extends ArrayAdapter<Action> {
         }
         TextView time = convertView.findViewById(R.id.layout_group_actions_history_row_time);
         TextView description = convertView.findViewById(R.id.layout_group_actions_history_row_description);
-        Action actoin = getItem(getCount() -1 - position);
-        Date timeCreated = new Date(actoin.getTimeCreated());
+        Action action = getItem(position);
+        Date timeCreated = new Date(action.getTimeCreated());
         DateFormat format = new SimpleDateFormat("dd/MM/yy   HH:mm");
         time.setText(format.format(timeCreated));
-        description.setText(actoin.getDescription());
+        description.setText(action.getDescription());
         return convertView;
     }
 }

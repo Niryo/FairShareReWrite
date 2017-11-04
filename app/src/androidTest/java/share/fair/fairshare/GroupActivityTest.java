@@ -65,4 +65,6 @@ public class GroupActivityTest {
 //payment history tab should open the newBillActivity in edit mode
 //group tab should show in the action button how many people selected, if there are more than 1 selected
 //group tab should not show selected counter badge if no one is selected
+//clicking on the action button should switch to newBillActivity with the correct users
+//clicking on the action button when no user is selected, should create new bill with all users
 }

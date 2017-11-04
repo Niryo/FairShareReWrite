@@ -88,6 +88,7 @@ public class GroupTest {
         operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
         group.addAction(new Action(operations, "bla", "description", true));
         assertEquals(user1.getBallance(), 50.0, 0.001);
+        assertEquals(user2.getBallance(), -50.0, 0.001);
     }
 
     @Test
@@ -108,5 +109,23 @@ public class GroupTest {
         Action action = new Action(operations, "bla", "description", true);
         group.addAction(action);
         assertEquals(group.getActionById(action.getId()), action);
+    }
+
+    @Test
+    public void cancelAction(){
+        User user1 = new User("testName");
+        User user2 = new User("testName2");
+        group.addUser(user1);
+        group.addUser(user2);
+        List<Action.Operation> operations = new ArrayList<>();
+        operations.add(new Action.Operation(user1.getId(), 50.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
+        Action action = new Action(operations, "bla", "description", true);
+        group.addAction(action);
+        group.cancelAction(action);
+        assertEquals(action.isEditable(),false);
+        assertEquals(user1.getBallance(), 0.0, 0.001);
+        assertEquals(user2.getBallance(), 0.0, 0.001);
+        assertEquals(group.getActions().size(),2);
     }
 }

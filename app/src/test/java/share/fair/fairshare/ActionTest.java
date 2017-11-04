@@ -3,6 +3,7 @@ package share.fair.fairshare;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,5 +48,38 @@ public class ActionTest {
         Action action1 = new Action(this.operationList,"testCreatorName", "testDescription", true);
         Action action2 = new Action(this.operationList,"testCreatorName", "testDescription", true);
         assertNotEquals(action1.getId(),action2.getId());
+    }
+
+    @Test
+    public void getOppositeActionShouldContainOppositeOperations() {
+        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
+        Action oppositeAction = action.getOpositeAction();
+        assertEquals(oppositeAction.getOperations().get(0).getAmountPaid(), -100.0, 0.001);
+        assertEquals(oppositeAction.getOperations().get(0).getShare(), -50.0, 0.001);
+        assertEquals(oppositeAction.getOperations().get(1).getAmountPaid(), 0.0, 0.001);
+        assertEquals(oppositeAction.getOperations().get(1).getShare(), -50.0, 0.001);
+        assertEquals(oppositeAction.getDescription(), action.getDescription() +" (cancelled)");
+    }
+    @Test
+    public void oppositeActionShouldContainCancelInDescription() {
+        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
+        Action oppositeAction = action.getOpositeAction();
+        assertEquals(oppositeAction.getDescription(), action.getDescription() +" (cancelled)");
+    }
+    @Test
+    public void oppositeActionShouldBeUnEditable() {
+        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
+        Action oppositeAction = action.getOpositeAction();
+        assertEquals(oppositeAction.isEditable(), false);
+    }
+    @Test
+    public void oppositeActionShouldShouldNotHavAutoCalculatedShare() {
+        List<Action.Operation> operationListWithAutoCalculatedShare = new ArrayList<>();
+        operationListWithAutoCalculatedShare.add(new Action.Operation("user1", 100.0, 50.0, true));
+        operationListWithAutoCalculatedShare.add(new Action.Operation("user2",  0.0, 50.0, true));
+        Action action = new Action(operationListWithAutoCalculatedShare,"testCreatorName", "testDescription", true);
+        Action oppositeAction = action.getOpositeAction();
+        assertEquals(oppositeAction.getOperations().get(0).isShareAutoCalculated(), false);
+        assertEquals(oppositeAction.getOperations().get(1).isShareAutoCalculated(), false);
     }
 }

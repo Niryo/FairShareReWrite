@@ -39,14 +39,17 @@ public class Group {
         this.applyAction(action);
     }
 
+    public void cancelAction(Action action) {
+        action.makeActionUnEditale();
+        addAction(action.getOpositeAction());
+    }
+
     public String getName() {
         return name;
     }
-
     public List<User> getUsers() {
         return users;
     }
-
     public void addUser(User user) {
         this.users.add(user);
 

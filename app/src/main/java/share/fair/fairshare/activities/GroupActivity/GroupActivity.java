@@ -1,6 +1,7 @@
 package share.fair.fairshare.activities.GroupActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -58,11 +59,17 @@ public class GroupActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
         args.putString("groupId", groupId);
-        this.groupDetailsView = new GroupDetailsView(getBaseContext(), this.group);
+        this.groupDetailsView = new GroupDetailsView(this, this.group);
         GroupActionsHistoryView groupActionsHistoryView =  new GroupActionsHistoryView(this.getBaseContext(), this.group);
         adapter.addView(groupDetailsView, getResources().getString(R.string.group_activity_tabs_group_details));
         adapter.addView(groupActionsHistoryView, getResources().getString(R.string.group_activity_tabs_group_actions_history));
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        recreate();
     }
 
     @Override

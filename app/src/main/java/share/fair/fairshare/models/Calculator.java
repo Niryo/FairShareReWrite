@@ -58,7 +58,7 @@ public class Calculator {
         private double amountPaid;
         private double share;
 
-        public BillLine(String userId, Double amountPaid, Double share) {
+        public BillLine(String userId, double amountPaid, double share) {
             this.userId = userId;
             this.amountPaid = amountPaid;
             this.share = share;
