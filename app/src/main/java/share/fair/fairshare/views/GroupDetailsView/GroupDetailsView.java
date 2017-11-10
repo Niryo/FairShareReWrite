@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
+import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
 
@@ -54,6 +56,14 @@ public class GroupDetailsView extends LinearLayout {
                 gotToNewBillActivity.putStringArrayListExtra(NewBillActivity.USER_IDS_LIST_EXTRA, userIdsListExtra);
                 context.startActivity(gotToNewBillActivity);
 
+            }
+        });
+
+        this.usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("custom", ((User)adapterView.getItemAtPosition(i)).getName());
+                Log.d("custom", "test");
             }
         });
         shakeAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);

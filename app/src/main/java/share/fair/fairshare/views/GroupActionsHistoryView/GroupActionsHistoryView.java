@@ -34,7 +34,6 @@ public class GroupActionsHistoryView extends LinearLayout {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("custom", ((Action)adapterView.getItemAtPosition(i)).getDescription());
                 Intent intent = new Intent(getContext(), NewBillActivity.class);
                 intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, ((Action)adapterView.getItemAtPosition(i)).getId());
                 intent.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());

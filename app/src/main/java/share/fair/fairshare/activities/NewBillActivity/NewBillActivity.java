@@ -180,7 +180,10 @@ public class NewBillActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.new_bill_activity_action_bar_create_mode, menu);
-        if (this.isEditMode) {
+        if(this.actionToEdit != null && !this.actionToEdit.isEditable()) {
+            menu.findItem(R.id.new_bill_activity_action_bar_done).setVisible(false);
+            menu.findItem(R.id.new_bill_activity_action_bar_edit).setVisible(false);
+        } else if (this.isEditMode) {
             menu.findItem(R.id.new_bill_activity_action_bar_done).setVisible(true);
             menu.findItem(R.id.new_bill_activity_action_bar_edit).setVisible(false);
         } else {

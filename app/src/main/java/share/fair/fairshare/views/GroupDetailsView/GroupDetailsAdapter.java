@@ -11,13 +11,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import share.fair.fairshare.R;
+import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.User;
 
 /**
  * Created by niryo on 26/10/2017.
  */
 
-public class GroupDetailsAdapter extends ArrayAdapter<List<User>> {
+public class GroupDetailsAdapter extends ArrayAdapter<User> {
     private final List<User> users;
     private final Context context;
     private final GroupDetailsView groupDetailsView;
@@ -49,8 +50,8 @@ public class GroupDetailsAdapter extends ArrayAdapter<List<User>> {
         }
         TextView userNameText = convertView.findViewById(R.id.layout_group_activity_user_row_user_name);
         TextView userBallanceText = convertView.findViewById(R.id.layout_group_activity_user_row_user_ballance);
-        userNameText.setText(users.get(position).getName());
-        userBallanceText.setText(Double.toString(users.get(position).getBallance()));
+        userNameText.setText(getItem(position).getName());
+        userBallanceText.setText(Double.toString(getItem(position).getBallance()));
         return convertView;
     }
 

@@ -21,3 +21,4 @@ public class NewBillActivityTest {
 //when editing existing action, should load in non-editing mode.
 //should go back to fresh groupActivity after creating new bill
 //when editing action, should cancel the current action and create new action.
+//if action is unEditable, edit icon should be hidden
