@@ -12,23 +12,23 @@ import java.util.List;
 
 public class Group implements Serializable {
     private String name;
-    private String id;
+    private String key;
     private List<User> users = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
 
 
     public Group(String name) {
-        this.id = new BigInteger(130, new SecureRandom()).toString(32);
+        this.key = new BigInteger(130, new SecureRandom()).toString(32);
         this.name = name;
     }
 
-    public Group(String id, String name) {
-        this.id = id;
+    public Group(String key, String name) {
+        this.key = key;
         this.name = name;
     }
 
     public String getKey() {
-        return id;
+        return key;
     }
 
     public List<Action> getActions() {

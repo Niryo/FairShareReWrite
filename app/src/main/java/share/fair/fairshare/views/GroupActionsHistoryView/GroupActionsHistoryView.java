@@ -51,7 +51,7 @@ public class GroupActionsHistoryView extends LinearLayout {
                 }
                 intent.putExtra(NewBillActivity.USERS_IN_BILL_EXTRA, usersInvolvedInBills);
                 intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, action.getId());
-                intent.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getKey());
+                intent.putExtra(NewBillActivity.GROUP_KEY_EXTRA, group.getKey());
                 getContext().startActivity(intent);
             }
         });

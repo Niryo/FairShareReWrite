@@ -39,7 +39,7 @@ public class GroupDetailsView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 Intent goToNewBillActivity = new Intent(getContext(), NewBillActivity.class);
-                goToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getKey());
+                goToNewBillActivity.putExtra(NewBillActivity.GROUP_KEY_EXTRA, group.getKey());
                 goToNewBillActivity.putExtra(NewBillActivity.USERS_IN_BILL_EXTRA, getUsersInvolvedInBill());
                 context.startActivity(goToNewBillActivity);
 

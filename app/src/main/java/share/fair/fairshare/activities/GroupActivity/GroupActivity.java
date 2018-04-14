@@ -9,7 +9,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 
 import share.fair.fairshare.models.User;
+import share.fair.fairshare.services.DeviceStorageManager;
 import share.fair.fairshare.views.GroupActionsHistoryView.GroupActionsHistoryView;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
@@ -31,7 +31,7 @@ import share.fair.fairshare.models.Group;
  */
 
 public class GroupActivity extends AppCompatActivity {
-    public static final String GROUP_ID_EXTRA = "GROUP_ID_EXTRA";
+    public static final String GROUP_KEY_EXTRA = "GROUP_KEY_EXTRA";
     private Group group;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -40,8 +40,8 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityGroupBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_group);
-        String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
-        this.group = ((AppActivity) getApplication()).getGroupList().getGroupById(groupId);
+        String groupKey = getIntent().getStringExtra(GROUP_KEY_EXTRA);
+        this.group = DeviceStorageManager.readGroup(getApplicationContext(), groupKey);
         binding.groupActivityActionBar.setTitle(group.getName());
         setSupportActionBar(binding.groupActivityActionBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -57,7 +57,7 @@ public class GroupActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         GroupActivityPagerAdapter adapter = new GroupActivityPagerAdapter(getBaseContext());
         Bundle args = new Bundle();
-        String groupId = getIntent().getStringExtra(GROUP_ID_EXTRA);
+        String groupId = getIntent().getStringExtra(GROUP_KEY_EXTRA);
         args.putString("groupId", groupId);
         this.groupDetailsView = new GroupDetailsView(this, this.group);
         GroupActionsHistoryView groupActionsHistoryView =  new GroupActionsHistoryView(this.getBaseContext(), this.group);

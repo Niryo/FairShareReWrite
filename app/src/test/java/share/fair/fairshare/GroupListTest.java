@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import share.fair.fairshare.models.Group;
-import share.fair.fairshare.models.GroupList;
 import share.fair.fairshare.services.FireBaseServerApi;
 
 import static org.junit.Assert.assertEquals;

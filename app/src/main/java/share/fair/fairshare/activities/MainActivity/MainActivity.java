@@ -1,6 +1,5 @@
-package share.fair.fairshare.activities;
+package share.fair.fairshare.activities.MainActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -12,37 +11,39 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import share.fair.fairshare.Constants.FileNames;
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.activities.GroupActivity.GroupActivity;
 import share.fair.fairshare.databinding.ActivityMainBinding;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.GroupNameAndKey;
 import share.fair.fairshare.services.DeviceStorageManager;
+import share.fair.fairshare.services.FireBaseServerApi;
 
-import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_ID_EXTRA;
+import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_KEY_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String GROUP_NAMES_FILE = "groupNames";
     private ListView groupsNamesListView;
     private List<GroupNameAndKey> groupNamesAndKeysList;
+    private FireBaseServerApi cloudApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.readGroupNamesFromDeviceStorage();
+        this.cloudApi = ((AppActivity) getApplication()).cloudApi;
+        this.groupNamesAndKeysList = DeviceStorageManager.readGroupNamesAndKeys(this);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         setSupportActionBar(binding.mainActivityActionBar);
         this.groupsNamesListView = binding.mainActivityList;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent goToGroupActivity = new Intent(getApplicationContext(), GroupActivity.class);
-                goToGroupActivity.putExtra(GROUP_ID_EXTRA, groupNamesAndKeysList.get(i).key);
+                goToGroupActivity.putExtra(GROUP_KEY_EXTRA, groupNamesAndKeysList.get(i).key);
                 startActivity(goToGroupActivity);
             }
         });
@@ -70,25 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void readGroupNamesFromDeviceStorage(){
-        try {
-            this.groupNamesAndKeysList = (List<GroupNameAndKey>) DeviceStorageManager.readObject(getBaseContext(),GROUP_NAMES_FILE);
-        } catch (FileNotFoundException e) {
-            this.groupNamesAndKeysList = new ArrayList<>();
-            this.updateGroupNamesOnDeviceStorage();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateGroupNamesOnDeviceStorage(){
-        try {
-            DeviceStorageManager.writeObject(getApplicationContext(),GROUP_NAMES_FILE, this.groupNamesAndKeysList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void showCreateNewGroupDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View dialogContent = this.getLayoutInflater().inflate(R.layout.dialog_create_new_group, null);
@@ -103,12 +85,83 @@ public class MainActivity extends AppCompatActivity {
                         EditText yourName = dialogContent.findViewById(R.id.dialog_create_new_group_yourname);
                         Group newGroup = new Group(groupName.getText().toString());
                         groupNamesAndKeysList.add(new GroupNameAndKey(newGroup.getName(),newGroup.getKey()));
-                        updateGroupNamesOnDeviceStorage();
-                        ((AppActivity) getApplication()).cloudApi.addGroup(newGroup.getKey(),newGroup.getName());
+                        DeviceStorageManager.saveGroup(getApplicationContext(), newGroup);
+                        DeviceStorageManager.saveGroupNamesAndKeys(getApplicationContext(), groupNamesAndKeysList);
+                        cloudApi.addGroup(newGroup.getKey(),newGroup.getName());
                         ((BaseAdapter) groupsNamesListView.getAdapter()).notifyDataSetChanged();
                     }
                 }).create().show();
 
+    }
+
+    private void showGroupKeyErrorDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.error_group_key_dialog_title)
+                .setMessage(R.string.error_group_key_dialog_message)
+                .setNegativeButton(R.string.Dismiss,null)
+                .create()
+                .show();
+    }
+
+    private void showGroupKeySuccessDialog(String groupName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.success_group_key_dialog_title)
+                .setMessage(getResources().getString(R.string.success_group_key_dialog_message, groupName))
+                .setNegativeButton(R.string.Dismiss,null)
+                .create()
+                .show();
+    }
+
+    private boolean isGroupAlreadyExist(Group group){
+        for(GroupNameAndKey groupNameAndKey: this.groupNamesAndKeysList){
+            if(groupNameAndKey.key.equals( group.getKey())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showEnterGroupKeyDialog(){
+        final View dialogContent = this.getLayoutInflater().inflate(R.layout.dialog_enter_group_key, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.enter_group_key_dialog_title)
+                .setView(dialogContent)
+                .setNegativeButton(R.string.cancel,null)
+                .setPositiveButton(R.string.join, null)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                Button possitiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                possitiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final EditText groupKey = dialogContent.findViewById(R.id.dialog_enter_group_key);
+                        cloudApi.getGroupName(groupKey.getText().toString(), new FireBaseServerApi.FireBaseCallback() {
+                            @Override
+                            public void onData(Object data) {
+                                if(data == null) {
+                                    showGroupKeyErrorDialog();
+                                } else {
+                                    Group addedGroup = new Group(groupKey.getText().toString(), data.toString());
+                                    if(!isGroupAlreadyExist(addedGroup)){
+                                        groupNamesAndKeysList.add(new GroupNameAndKey(addedGroup.getName(),addedGroup.getKey()));
+                                        DeviceStorageManager.saveGroupNamesAndKeys(getApplicationContext(), groupNamesAndKeysList);
+                                        ((BaseAdapter) groupsNamesListView.getAdapter()).notifyDataSetChanged();
+                                        DeviceStorageManager.saveGroup(getApplicationContext(), addedGroup);
+                                    }
+                                    dialog.dismiss();
+                                    showGroupKeySuccessDialog(addedGroup.getName());
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 
     @Override
@@ -130,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.main_activity_remove_group:
                 final GroupNameAndKey groupToRemove = groupNamesAndKeysList.get(info.position);
-                String message = "Do you really want to remove " + groupToRemove.name;
+                String message = getResources().getString(R.string.remove_group_message, groupToRemove.name);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.wait)
                         .setMessage(message)
@@ -139,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 groupNamesAndKeysList.remove(groupToRemove);
-                                updateGroupNamesOnDeviceStorage();
+                                DeviceStorageManager.saveGroupNamesAndKeys(getApplicationContext(), groupNamesAndKeysList);
                                 ((BaseAdapter) groupsNamesListView.getAdapter()).notifyDataSetChanged();
                             }
                         }).create().show();
@@ -156,29 +209,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_activity_action_bar_add_group:
                 this.showCreateNewGroupDialog();
                 return true;
+            case R.id.main_activity_action_bar_enter_group_key:
+                this.showEnterGroupKeyDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private class GroupNamesAdapter extends ArrayAdapter<List<GroupNameAndKey>>{
-        private final List<GroupNameAndKey> groupNamesAndKeys;
-
-        public GroupNamesAdapter(Context context, List<GroupNameAndKey> groupNamesAndKeys) {
-            super(context, -1, (List) groupNamesAndKeys);
-            this.groupNamesAndKeys = groupNamesAndKeys;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = getLayoutInflater().inflate(R.layout.layout_group_row, null);
-            }
-            TextView groupName = convertView.findViewById(R.id.layout_group_row_group_name);
-            groupName.setText(this.groupNamesAndKeys.get(position).name);
-            return convertView;
-        }
-    }
 }
 
 

@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import share.fair.fairshare.R;
-import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.activities.GroupActivity.GroupActivity;
 import share.fair.fairshare.databinding.ActivityNewBillBinding;
 import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Calculator;
 import share.fair.fairshare.models.Group;
+import share.fair.fairshare.services.DeviceStorageManager;
 
 public class NewBillActivity extends AppCompatActivity {
     public static final String USERS_IN_BILL_EXTRA = "USERS_IN_BILL_EXTRA";
-    public static final String GROUP_ID_EXTRA = "GROUP_ID_EXTRA";
+    public static final String GROUP_KEY_EXTRA = "GROUP_KEY_EXTRA";
     public static final String ACTION_TO_EDIT_ID = "ACTION_TO_EDIT_ID";
 
     private List<NewBillRowViewHolder> billRows = new ArrayList<>();
@@ -37,7 +37,7 @@ public class NewBillActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.group = ((AppActivity) getApplication()).getGroupList().getGroupById(getIntent().getStringExtra(GROUP_ID_EXTRA));
+        this.group = DeviceStorageManager.readGroup(getApplicationContext() ,getIntent().getStringExtra(GROUP_KEY_EXTRA));
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_new_bill);
         this.binding.newBillActivityBlockTouchOverlay.requestFocus();
         String actionIdToEdit = getIntent().getStringExtra(ACTION_TO_EDIT_ID);
@@ -189,7 +189,7 @@ public class NewBillActivity extends AppCompatActivity {
                 this.createBill();
                 Intent intent = new Intent(this, GroupActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(GROUP_ID_EXTRA, group.getKey());
+                intent.putExtra(GROUP_KEY_EXTRA, group.getKey());
                 finish();
                 getBaseContext().startActivity(intent);
                 return true;

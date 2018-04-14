@@ -22,7 +22,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_ID_EXTRA;
+import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_KEY_EXTRA;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -37,7 +37,7 @@ public class GroupActivityTest {
                 protected Intent getActivityIntent() {
                     Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
                     Intent result = new Intent(targetContext, GroupActivity.class);
-                    result.putExtra(GROUP_ID_EXTRA, "testGroupId");
+                    result.putExtra(GROUP_KEY_EXTRA, "testGroupId");
                     return result;
                 }
             };

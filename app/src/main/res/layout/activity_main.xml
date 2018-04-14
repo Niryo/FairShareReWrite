@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="share.fair.fairshare.activities.MainActivity">
+        tools:context="share.fair.fairshare.activities.MainActivity.MainActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_activity_action_bar"
