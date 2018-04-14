@@ -1,5 +1,6 @@
 package share.fair.fairshare.models;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -7,7 +8,7 @@ import java.security.SecureRandom;
  * Created by niryo on 29/09/2017.
  */
 
-public class User {
+public class User implements Serializable{
     private String id;
     private String name;
     private double ballance;
@@ -35,7 +36,7 @@ public class User {
         return id;
     }
 
-    public double getBallance() {
+    public double getBalance() {
         return ballance;
     }
 

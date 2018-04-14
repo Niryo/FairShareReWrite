@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +21,9 @@ import share.fair.fairshare.databinding.ActivityNewBillBinding;
 import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Calculator;
 import share.fair.fairshare.models.Group;
-import share.fair.fairshare.models.User;
-
-import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_ID_EXTRA;
 
 public class NewBillActivity extends AppCompatActivity {
-    public static final String USER_IDS_LIST_EXTRA = "USER_IDS_LIST_EXTRA";
+    public static final String USERS_IN_BILL_EXTRA = "USERS_IN_BILL_EXTRA";
     public static final String GROUP_ID_EXTRA = "GROUP_ID_EXTRA";
     public static final String ACTION_TO_EDIT_ID = "ACTION_TO_EDIT_ID";
 
@@ -46,11 +44,10 @@ public class NewBillActivity extends AppCompatActivity {
         if (actionIdToEdit != null) {
             actionToEdit = this.group.getActionById(actionIdToEdit);
             binding.newBillActivityBillDescription.setText(actionToEdit.getDescription());
-            createRows(getUsersInvolvedInBillFromAction(this.group.getActionById(actionIdToEdit)));
         } else {
-            createRows(getUsersInvolvedInBillFromIntent());
             this.enterEditMode();
         }
+        createRows();
         this.initActionBar();
     }
 
@@ -68,16 +65,6 @@ public class NewBillActivity extends AppCompatActivity {
                share = Double.toString(operation.getShare());
             }
             usersInvolvedInBill.add(new UserInvolvedInBill(userId, userName, amountPaid, share));
-        }
-        return usersInvolvedInBill;
-    }
-
-    private List<UserInvolvedInBill> getUsersInvolvedInBillFromIntent() {
-        List<String> userIdsExtra = getIntent().getStringArrayListExtra(USER_IDS_LIST_EXTRA);
-        List<UserInvolvedInBill> usersInvolvedInBill = new ArrayList<>();
-        for (String userId : userIdsExtra) {
-            User user = group.findUserById(userId);
-            usersInvolvedInBill.add(new UserInvolvedInBill(userId, user.getName(), "", ""));
         }
         return usersInvolvedInBill;
     }
@@ -137,7 +124,8 @@ public class NewBillActivity extends AppCompatActivity {
     }
 
 
-    private void createRows(List<UserInvolvedInBill> usersInvolvedInBill) {
+    private void createRows() {
+        List<UserInvolvedInBill> usersInvolvedInBill = ( List<UserInvolvedInBill>) getIntent().getSerializableExtra(USERS_IN_BILL_EXTRA);
         for (UserInvolvedInBill userInvolvedInBill : usersInvolvedInBill) {
             View inflatedRow = this.getLayoutInflater().inflate(R.layout.layout_new_bill_activity_user_row, null);
             NewBillRowViewHolder rowViewHolder = new NewBillRowViewHolder(userInvolvedInBill.userId, inflatedRow);
@@ -165,7 +153,8 @@ public class NewBillActivity extends AppCompatActivity {
             if (isShareAutoCalculated) {
                 share = this.autoShare;
             }
-            operations.add(new Action.Operation(viewHolder.userId, amountPaid, share, isShareAutoCalculated));
+            //todo: clean this userNameShit
+            operations.add(new Action.Operation(viewHolder.userId, viewHolder.userName.getText().toString(), amountPaid, share, isShareAutoCalculated));
         }
         String description = this.binding.newBillActivityBillDescription.getText().toString();
         this.group.addAction(new Action(operations, "testCreatorName", description, true));
@@ -200,7 +189,7 @@ public class NewBillActivity extends AppCompatActivity {
                 this.createBill();
                 Intent intent = new Intent(this, GroupActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(GROUP_ID_EXTRA, group.getId());
+                intent.putExtra(GROUP_ID_EXTRA, group.getKey());
                 finish();
                 getBaseContext().startActivity(intent);
                 return true;
@@ -233,8 +222,8 @@ public class NewBillActivity extends AppCompatActivity {
         }
     }
 
-    //todo: clean this shit
-    private class UserInvolvedInBill {
+    //todo: clean this shit, amount paid and share should not be strings
+    public static class UserInvolvedInBill implements Serializable {
         private final String userId;
         private final String userName;
         private final String amountPaid;

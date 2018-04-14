@@ -3,7 +3,6 @@ package share.fair.fairshare;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +23,8 @@ public class ActionTest {
 
     @Before
     public void init() {
-        this.operationList.add(new Action.Operation("user1", 100.0, 50.0));
-        this.operationList.add(new Action.Operation("user2",  0.0, 50.0));
+        this.operationList.add(new Action.Operation("user1", "user1", 100.0, 50.0));
+        this.operationList.add(new Action.Operation("user2", "user2", 0.0, 50.0));
     }
 
     @Test
@@ -75,8 +74,8 @@ public class ActionTest {
     @Test
     public void oppositeActionShouldShouldNotHavAutoCalculatedShare() {
         List<Action.Operation> operationListWithAutoCalculatedShare = new ArrayList<>();
-        operationListWithAutoCalculatedShare.add(new Action.Operation("user1", 100.0, 50.0, true));
-        operationListWithAutoCalculatedShare.add(new Action.Operation("user2",  0.0, 50.0, true));
+        operationListWithAutoCalculatedShare.add(new Action.Operation("user1", "user1", 100.0, 50.0, true));
+        operationListWithAutoCalculatedShare.add(new Action.Operation("user2", "user2", 0.0, 50.0, true));
         Action action = new Action(operationListWithAutoCalculatedShare,"testCreatorName", "testDescription", true);
         Action oppositeAction = action.getOpositeAction();
         assertEquals(oppositeAction.getOperations().get(0).isShareAutoCalculated(), false);

@@ -9,11 +9,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 
+import share.fair.fairshare.models.User;
 import share.fair.fairshare.views.GroupActionsHistoryView.GroupActionsHistoryView;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
@@ -42,11 +47,6 @@ public class GroupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         binding.groupActivityActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        //todo: delete:
-        group.createUser("a");
-        group.createUser("b");
-        group.createUser("c");
-        //=====================
         viewPager = (ViewPager) findViewById(R.id.group_activity_viewpager);
         setupViewPager(viewPager);
 
@@ -92,6 +92,39 @@ public class GroupActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.group_details_view_user_context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()) {
+            case R.id.group_details_view_remove_user:
+                final User userToRemove = group.getUsers().get(info.position);
+                String message = "Do you really want to remove "
+                        + userToRemove.getName() +
+                        " from the group?\n" +
+                        "(All user's debts within the group will be settled up)";
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.wait)
+                        .setMessage(message)
+                        .setNegativeButton(R.string.cancel,null)
+                        .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                group.removeUserById(userToRemove.getId());
+                                groupDetailsView.notifyAdapterChange();
+                            }
+                        }).create().show();
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 

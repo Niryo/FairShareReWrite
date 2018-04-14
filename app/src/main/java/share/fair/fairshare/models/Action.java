@@ -70,6 +70,7 @@ public class Action {
 
     public static class Operation {
         private final String  userId;
+        private final String userName;
         private final double  amountPaid;
         private final double share;
         private final boolean isShareAutoCalculated;
@@ -78,23 +79,31 @@ public class Action {
             return isShareAutoCalculated;
         }
 
-        public Operation(String userId, double amountPaid, double share) {
+        public Operation(String userId, String userName, double amountPaid, double share) {
             this.userId = userId;
+            this.userName = userName;
             this.amountPaid = amountPaid;
             this.share = share;
             this.isShareAutoCalculated = false;
         }
 
-        public Operation(String userId, double amountPaid, double share, boolean isShareAutoCalculated) {
+
+        public Operation(String userId, String userName, double amountPaid, double share, boolean isShareAutoCalculated) {
             this.userId = userId;
+            this.userName = userName;
+
             this.amountPaid = amountPaid;
             this.share = share;
             this.isShareAutoCalculated = isShareAutoCalculated;
         }
 
         public Operation getOppositeOperation() {
-            return new Operation(userId, -amountPaid, -share , false);
+            return new Operation(userId, userName, -amountPaid, -share , false);
         }
+        public String getUserName() {
+            return userName;
+        }
+
         public String getUserId() {
             return userId;
         }

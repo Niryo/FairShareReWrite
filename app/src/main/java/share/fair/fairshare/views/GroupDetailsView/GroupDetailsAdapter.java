@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import share.fair.fairshare.R;
-import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.User;
 
 /**
@@ -51,7 +50,7 @@ public class GroupDetailsAdapter extends ArrayAdapter<User> {
         TextView userNameText = convertView.findViewById(R.id.layout_group_activity_user_row_user_name);
         TextView userBallanceText = convertView.findViewById(R.id.layout_group_activity_user_row_user_ballance);
         userNameText.setText(getItem(position).getName());
-        userBallanceText.setText(Double.toString(getItem(position).getBallance()));
+        userBallanceText.setText(Double.toString(getItem(position).getBalance()));
         return convertView;
     }
 

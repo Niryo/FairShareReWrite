@@ -17,8 +17,12 @@
     <string name="your_name">Your name</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
+    <string name="remove">Remove</string>
     <string name="create_new_group">Create new group</string>
     <string name="add_user">Add person</string>
+    <string name="remove_user">Remove person</string>
+    <string name="remove_group">Remove group</string>
+    <string name="wait">Wait!</string>
     <string name="paid">Paid</string>
     <string name="share">Share</string>
     <string name="new_bill_default_paid_hint">0.0</string>

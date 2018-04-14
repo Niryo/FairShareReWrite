@@ -35,14 +35,14 @@ public class GroupTest {
     public void newGroupShouldHaveUniqueId(){
         Group group1 = new Group("testName");
         Group group2 = new Group("testName");
-        assertNotEquals(group1.getId(), group2.getId());
+        assertNotEquals(group1.getKey(), group2.getKey());
     }
 
     @Test
     public void shouldAllowCreatingGroupWithId(){
         Group testGroup = new Group("testId", "testName");
         assertEquals( testGroup.getName(), "testName");
-        assertEquals( testGroup.getId(), "testId");
+        assertEquals( testGroup.getKey(), "testId");
     }
 
     @Test
@@ -61,12 +61,48 @@ public class GroupTest {
 
 
     @Test
-    public void removeUserById() {
+    public void removeUserByIdShouldRemoveAUserFromTheUserList() {
         User user = new User("testName");
         String id = user.getId();
         this.group.addUser(user);
         this.group.removeUserById(id);
         assertEquals(this.group.getUsers().size(), 0);
+    }
+
+    @Test
+    public void removeUserByIdShouldSplitHisDebtsToAllGroupMembers() {
+        User user1 = new User("testName");
+        User user2 = new User("testName2");
+        User user3 = new User("testName2");
+        group.addUser(user1);
+        group.addUser(user2);
+        group.addUser(user3);
+        List<Action.Operation> operations = new ArrayList<>();
+        operations.add(new Action.Operation(user1.getId(), user1.getName(), 100.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        operations.add(new Action.Operation(user3.getId(), user3.getName(), 0.0, 50.0));
+        group.addAction(new Action(operations, "bla", "description", true));
+        group.removeUserById(user3.getId());
+        assertEquals(75.0, user1.getBalance(), 0.001);
+        assertEquals(-75.0, user2.getBalance(), 0.001);
+    }
+
+    @Test
+    public void removeUserByIdShouldSplitHisProfitToAllGroupMembers() {
+        User user1 = new User("testName");
+        User user2 = new User("testName2");
+        User user3 = new User("testName2");
+        group.addUser(user1);
+        group.addUser(user2);
+        group.addUser(user3);
+        List<Action.Operation> operations = new ArrayList<>();
+        operations.add(new Action.Operation(user1.getId(), user1.getName(), 100.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        operations.add(new Action.Operation(user3.getId(), user3.getName(), 0.0, 50.0));
+        group.addAction(new Action(operations, "bla", "description", true));
+        group.removeUserById(user1.getId());
+        assertEquals(user1.getBalance(), 0.0, 0.001);
+        assertEquals(user2.getBalance(), 0.0, 0.001);
     }
 
     @Test
@@ -84,11 +120,11 @@ public class GroupTest {
         group.addUser(user1);
         group.addUser(user2);
         List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), 50.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
+        operations.add(new Action.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
         group.addAction(new Action(operations, "bla", "description", true));
-        assertEquals(user1.getBallance(), 50.0, 0.001);
-        assertEquals(user2.getBallance(), -50.0, 0.001);
+        assertEquals(user1.getBalance(), 50.0, 0.001);
+        assertEquals(user2.getBalance(), -50.0, 0.001);
     }
 
     @Test
@@ -104,8 +140,8 @@ public class GroupTest {
         group.addUser(user1);
         group.addUser(user2);
         List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), 50.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
+        operations.add(new Action.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
         Action action = new Action(operations, "bla", "description", true);
         group.addAction(action);
         assertEquals(group.getActionById(action.getId()), action);
@@ -118,14 +154,14 @@ public class GroupTest {
         group.addUser(user1);
         group.addUser(user2);
         List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), 50.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), 0.0, 50.0));
+        operations.add(new Action.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
+        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
         Action action = new Action(operations, "bla", "description", true);
         group.addAction(action);
         group.cancelAction(action);
         assertEquals(action.isEditable(),false);
-        assertEquals(user1.getBallance(), 0.0, 0.001);
-        assertEquals(user2.getBallance(), 0.0, 0.001);
+        assertEquals(user1.getBalance(), 0.0, 0.001);
+        assertEquals(user2.getBalance(), 0.0, 0.001);
         assertEquals(group.getActions().size(),2);
     }
 }

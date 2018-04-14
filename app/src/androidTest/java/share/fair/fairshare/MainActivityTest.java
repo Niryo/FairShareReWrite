@@ -30,8 +30,6 @@ import static org.hamcrest.Matchers.not;
 @LargeTest
 public class MainActivityTest {
 
-    private String mStringToBetyped;
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
@@ -87,7 +85,7 @@ public class MainActivityTest {
 
         //check that users have ballance 0:
         onData(anything())
-                .inAdapterView(withId(R.id.group_activity_users_list))
+                .inAdapterView(withId(R.id.group_activity_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.layout_group_activity_user_row_user_ballance))
                 .check(matches(withText("0.0")));

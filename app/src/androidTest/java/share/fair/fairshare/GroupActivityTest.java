@@ -67,4 +67,7 @@ public class GroupActivityTest {
 //group tab should not show selected counter badge if no one is selected
 //clicking on the action button should switch to newBillActivity with the correct users
 //clicking on the action button when no user is selected, should create new bill with all users
+//should show userOptionsMenu on long click
+//clicking on remove user should open a confirmation dialog.
+//removing a user from the group should remove it from the list and split his debts/profit across all other group members.
 }

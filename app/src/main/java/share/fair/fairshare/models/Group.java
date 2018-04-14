@@ -1,5 +1,6 @@
 package share.fair.fairshare.models;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by niryo on 28/09/2017.
  */
 
-public class Group {
+public class Group implements Serializable {
     private String name;
     private String id;
     private List<User> users = new ArrayList<>();
@@ -26,7 +27,7 @@ public class Group {
         this.name = name;
     }
 
-    public String getId() {
+    public String getKey() {
         return id;
     }
 
@@ -69,6 +70,38 @@ public class Group {
         return null;
     }
 
+    private void clearUserBalance(User userToRemove) {
+        double balance = userToRemove.getBalance();
+        double splitBalance = - balance / (users.size() -1 ) ;
+        List<Action.Operation> operations = new ArrayList<>();
+        for(User user: users) {
+            if(user != userToRemove) {
+                operations.add(new Action.Operation(user.getId(), user.getName(), 0, splitBalance));
+            } else {
+                operations.add(new Action.Operation(user.getId(), user.getName(), 0, balance));
+            }
+        }
+        String description = "Remove " + userToRemove.getName() + " from the group";
+        Action action = new Action(operations,"creatorName",description, false);
+        applyAction(action);
+    }
+
+
+    private List<Action.Operation> test(User userToRemove) {
+        double balance = userToRemove.getBalance();
+        double splitBalance = - balance / (users.size() -1 ) ;
+        List<Action.Operation> operations = new ArrayList<>();
+        for(User user: users) {
+            if(user != userToRemove) {
+                operations.add(new Action.Operation(user.getId(), user.getName(), 0, splitBalance));
+            } else {
+                operations.add(new Action.Operation(user.getId(), user.getName(), 0, balance));
+            }
+        }
+
+        return operations;
+    }
+
     public void removeUserById(String userId) {
         User userToRemove = null;
         for(User user: this.users) {
@@ -76,13 +109,14 @@ public class Group {
                 userToRemove = user;
             }
         }
+        clearUserBalance(userToRemove);
         this.users.remove(userToRemove);
     }
 
     private void applyAction(Action action) {
         for(Action.Operation operation : action.getOperations()) {
             User user = this.findUserById(operation.getUserId());
-            user.setBallance(user.getBallance() + operation.getAmountPaid() - operation.getShare());
+            user.setBallance(user.getBalance() + operation.getAmountPaid() - operation.getShare());
         }
     }
 

@@ -3,11 +3,9 @@ package share.fair.fairshare.views.GroupDetailsView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,7 +16,6 @@ import java.util.List;
 
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
-import share.fair.fairshare.models.Action;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
 
@@ -36,40 +33,37 @@ public class GroupDetailsView extends LinearLayout {
         this.group = group;
         View rootView = inflate(context, R.layout.layout_group_details, this);
         this.usersListView = rootView.findViewById(R.id.group_activity_list);
+        ((Activity)context).registerForContextMenu(this.usersListView);
         this.usersListView.setAdapter(new GroupDetailsAdapter(getContext(), this, this.group.getUsers()));
         rootView.findViewById(R.id.group_activity_floating_action_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent gotToNewBillActivity = new Intent(getContext(), NewBillActivity.class);
-                gotToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());
-                ArrayList userIdsListExtra = new ArrayList<>();
-                if(selectedUsers.size() == 0){
-                    for (User user : group.getUsers()) {
-                        userIdsListExtra.add(user.getId());
-                    }
-                } else {
-                    for (User user : selectedUsers) {
-                        userIdsListExtra.add(user.getId());
-                    }
-                }
-
-                gotToNewBillActivity.putStringArrayListExtra(NewBillActivity.USER_IDS_LIST_EXTRA, userIdsListExtra);
-                context.startActivity(gotToNewBillActivity);
+                Intent goToNewBillActivity = new Intent(getContext(), NewBillActivity.class);
+                goToNewBillActivity.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getKey());
+                goToNewBillActivity.putExtra(NewBillActivity.USERS_IN_BILL_EXTRA, getUsersInvolvedInBill());
+                context.startActivity(goToNewBillActivity);
 
             }
         });
 
-        this.usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("custom", ((User)adapterView.getItemAtPosition(i)).getName());
-                Log.d("custom", "test");
-            }
-        });
         shakeAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
         scaleUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
         scaleDownAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
         personCountBadge = rootView.findViewById(R.id.group_activity_person_count_badge);
+    }
+
+    private ArrayList<NewBillActivity.UserInvolvedInBill> getUsersInvolvedInBill() {
+        ArrayList<NewBillActivity.UserInvolvedInBill> usersInvolvedInBills = new ArrayList<>();
+        ArrayList<User> users;
+        if(selectedUsers.size() == 0){
+            users =  (ArrayList<User>) group.getUsers();
+        } else {
+            users = (ArrayList<User>) selectedUsers;
+        }
+        for (User user : users) {
+            usersInvolvedInBills.add(new NewBillActivity.UserInvolvedInBill(user.getId(),user.getName(),"",""));
+        }
+        return usersInvolvedInBills;
     }
 
     public void updatePersonCountBadge() {

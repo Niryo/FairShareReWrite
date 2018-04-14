@@ -1,26 +1,17 @@
 package share.fair.fairshare.services;
 
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.acl.Group;
 
 /**
  * Created by niryo on 26/09/2017.
  */
-
 public class FireBaseServerApi {
     public interface FireBaseCallback {
         void onData(Object data);
@@ -29,24 +20,14 @@ public class FireBaseServerApi {
     public static GroupReference group(String groupKey) {
         return new GroupReference(groupKey);
     }
-    public static void addGroup(String groupKey) {
-       String cloudKey = FirebaseDatabase
-                .getInstance()
+
+    public void addGroup(String groupKey, String groupName) {
+        Log.d("nir","saving to firebase");
+        FirebaseDatabase.getInstance()
                 .getReference()
-                .push()
-                .getKey();
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child(cloudKey)
-                .child("Actions")
-                .setValue("")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d("custom","puk" + task.isSuccessful());
-                    }
-                });
+                .child(groupKey)
+                .child("groupName")
+                .setValue(groupName);
     }
 
 

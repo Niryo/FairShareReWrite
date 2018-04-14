@@ -23,7 +23,7 @@ public class UserTest {
         User user = new User("testId","testName", 88.500);
         assertEquals(user.getId(), "testId");
         assertEquals(user.getName(), "testName");
-        assertEquals(user.getBallance(), 88.500);
+        assertEquals(user.getBalance(), 88.500);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class UserTest {
     @Test
     public void newUserShouldHaveZeroBallance() {
         User user = new User("testName");
-        assertEquals(user.getBallance(), 0.0);
+        assertEquals(user.getBalance(), 0.0);
     }
 
 

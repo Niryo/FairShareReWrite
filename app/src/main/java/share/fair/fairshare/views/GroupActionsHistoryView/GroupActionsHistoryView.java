@@ -2,16 +2,12 @@ package share.fair.fairshare.views.GroupActionsHistoryView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
@@ -35,10 +31,31 @@ public class GroupActionsHistoryView extends LinearLayout {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getContext(), NewBillActivity.class);
-                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, ((Action)adapterView.getItemAtPosition(i)).getId());
-                intent.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getId());
+                Action action = ((Action)adapterView.getItemAtPosition(i));
+                ArrayList<NewBillActivity.UserInvolvedInBill> usersInvolvedInBills = new ArrayList<>();
+                for (Action.Operation operation: action.getOperations()) {
+                    String share="";
+                    if(!operation.isShareAutoCalculated()) {
+                        share = Double.toString(operation.getShare());
+                    }
+
+                    String amountPaid="";
+                    if(operation.getAmountPaid() >= 0.0000001) {
+                        amountPaid = Double.toString(operation.getAmountPaid());
+                    }
+                    usersInvolvedInBills.add(new NewBillActivity.UserInvolvedInBill(
+                            operation.getUserId(),
+                            operation.getUserName(),
+                            amountPaid,
+                            share));
+                }
+                intent.putExtra(NewBillActivity.USERS_IN_BILL_EXTRA, usersInvolvedInBills);
+                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, action.getId());
+                intent.putExtra(NewBillActivity.GROUP_ID_EXTRA, group.getKey());
                 getContext().startActivity(intent);
             }
         });
     }
+
+
 }
