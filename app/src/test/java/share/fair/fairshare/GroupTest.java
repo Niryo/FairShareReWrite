@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import share.fair.fairshare.models.Action;
+import share.fair.fairshare.models.PaymentAction;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.User;
 
@@ -77,11 +77,11 @@ public class GroupTest {
         group.addUser(user1);
         group.addUser(user2);
         group.addUser(user3);
-        List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), user1.getName(), 100.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
-        operations.add(new Action.Operation(user3.getId(), user3.getName(), 0.0, 50.0));
-        group.addAction(new Action(operations, "bla", "description", true));
+        List<PaymentAction.Operation> operations = new ArrayList<>();
+        operations.add(new PaymentAction.Operation(user1.getId(), user1.getName(), 100.0, 0.0));
+        operations.add(new PaymentAction.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        operations.add(new PaymentAction.Operation(user3.getId(), user3.getName(), 0.0, 50.0));
+        group.addAction(new PaymentAction(operations, "bla", "description", true));
         group.removeUserById(user3.getId());
         assertEquals(75.0, user1.getBalance(), 0.001);
         assertEquals(-75.0, user2.getBalance(), 0.001);
@@ -95,11 +95,11 @@ public class GroupTest {
         group.addUser(user1);
         group.addUser(user2);
         group.addUser(user3);
-        List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), user1.getName(), 100.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
-        operations.add(new Action.Operation(user3.getId(), user3.getName(), 0.0, 50.0));
-        group.addAction(new Action(operations, "bla", "description", true));
+        List<PaymentAction.Operation> operations = new ArrayList<>();
+        operations.add(new PaymentAction.Operation(user1.getId(), user1.getName(), 100.0, 0.0));
+        operations.add(new PaymentAction.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        operations.add(new PaymentAction.Operation(user3.getId(), user3.getName(), 0.0, 50.0));
+        group.addAction(new PaymentAction(operations, "bla", "description", true));
         group.removeUserById(user1.getId());
         assertEquals(user1.getBalance(), 0.0, 0.001);
         assertEquals(user2.getBalance(), 0.0, 0.001);
@@ -119,10 +119,10 @@ public class GroupTest {
         User user2 = new User("testName2");
         group.addUser(user1);
         group.addUser(user2);
-        List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
-        group.addAction(new Action(operations, "bla", "description", true));
+        List<PaymentAction.Operation> operations = new ArrayList<>();
+        operations.add(new PaymentAction.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
+        operations.add(new PaymentAction.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        group.addAction(new PaymentAction(operations, "bla", "description", true));
         assertEquals(user1.getBalance(), 50.0, 0.001);
         assertEquals(user2.getBalance(), -50.0, 0.001);
     }
@@ -139,12 +139,12 @@ public class GroupTest {
         User user2 = new User("testName2");
         group.addUser(user1);
         group.addUser(user2);
-        List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
-        Action action = new Action(operations, "bla", "description", true);
-        group.addAction(action);
-        assertEquals(group.getActionById(action.getId()), action);
+        List<PaymentAction.Operation> operations = new ArrayList<>();
+        operations.add(new PaymentAction.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
+        operations.add(new PaymentAction.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        PaymentAction paymentAction = new PaymentAction(operations, "bla", "description", true);
+        group.addAction(paymentAction);
+        assertEquals(group.getActionById(paymentAction.getId()), paymentAction);
     }
 
     @Test
@@ -153,15 +153,15 @@ public class GroupTest {
         User user2 = new User("testName2");
         group.addUser(user1);
         group.addUser(user2);
-        List<Action.Operation> operations = new ArrayList<>();
-        operations.add(new Action.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
-        operations.add(new Action.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
-        Action action = new Action(operations, "bla", "description", true);
-        group.addAction(action);
-        group.cancelAction(action);
-        assertEquals(action.isEditable(),false);
+        List<PaymentAction.Operation> operations = new ArrayList<>();
+        operations.add(new PaymentAction.Operation(user1.getId(), user1.getName(), 50.0, 0.0));
+        operations.add(new PaymentAction.Operation(user2.getId(), user2.getName(), 0.0, 50.0));
+        PaymentAction paymentAction = new PaymentAction(operations, "bla", "description", true);
+        group.addAction(paymentAction);
+        group.cancelAction(paymentAction);
+        assertEquals(paymentAction.isEditable(),false);
         assertEquals(user1.getBalance(), 0.0, 0.001);
         assertEquals(user2.getBalance(), 0.0, 0.001);
-        assertEquals(group.getActions().size(),2);
+        assertEquals(group.getPaymentActions().size(),2);
     }
 }

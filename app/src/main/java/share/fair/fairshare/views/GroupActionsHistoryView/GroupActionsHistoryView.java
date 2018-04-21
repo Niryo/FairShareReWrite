@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.NewBillActivity.NewBillActivity;
-import share.fair.fairshare.models.Action;
+import share.fair.fairshare.models.PaymentAction;
 import share.fair.fairshare.models.Group;
 
 
@@ -25,15 +25,15 @@ public class GroupActionsHistoryView extends LinearLayout {
         this.group = group;
         View rootView = inflate(context, R.layout.layout_group_actions_history, this);
         this.listView = rootView.findViewById(R.id.layout_group_actions_history_list);
-        GroupActionsHistoryAdapter adapter = new GroupActionsHistoryAdapter(getContext(), this.group.getActions());
+        GroupActionsHistoryAdapter adapter = new GroupActionsHistoryAdapter(getContext(), this.group.getPaymentActions());
         this.listView.setAdapter(adapter);
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getContext(), NewBillActivity.class);
-                Action action = ((Action)adapterView.getItemAtPosition(i));
+                PaymentAction paymentAction = ((PaymentAction)adapterView.getItemAtPosition(i));
                 ArrayList<NewBillActivity.UserInvolvedInBill> usersInvolvedInBills = new ArrayList<>();
-                for (Action.Operation operation: action.getOperations()) {
+                for (PaymentAction.Operation operation: paymentAction.getOperations()) {
                     String share="";
                     if(!operation.isShareAutoCalculated()) {
                         share = Double.toString(operation.getShare());
@@ -50,7 +50,7 @@ public class GroupActionsHistoryView extends LinearLayout {
                             share));
                 }
                 intent.putExtra(NewBillActivity.USERS_IN_BILL_EXTRA, usersInvolvedInBills);
-                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, action.getId());
+                intent.putExtra(NewBillActivity.ACTION_TO_EDIT_ID, paymentAction.getId());
                 intent.putExtra(NewBillActivity.GROUP_KEY_EXTRA, group.getKey());
                 getContext().startActivity(intent);
             }

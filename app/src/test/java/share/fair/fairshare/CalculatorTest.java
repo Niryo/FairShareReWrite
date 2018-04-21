@@ -4,10 +4,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import share.fair.fairshare.models.Calculator;
-import share.fair.fairshare.models.User;
+import share.fair.fairshare.services.Calculator;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

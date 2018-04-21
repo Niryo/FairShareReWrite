@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,22 +17,18 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import share.fair.fairshare.Constants.FileNames;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.activities.GroupActivity.GroupActivity;
 import share.fair.fairshare.databinding.ActivityMainBinding;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.GroupNameAndKey;
+import share.fair.fairshare.models.User;
 import share.fair.fairshare.services.DeviceStorageManager;
 import share.fair.fairshare.services.FireBaseServerApi;
 
+import static java.lang.Thread.sleep;
 import static share.fair.fairshare.activities.GroupActivity.GroupActivity.GROUP_KEY_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,17 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(goToGroupActivity);
             }
         });
-
-//        FireBaseServerApi
-//                .group("a13jpr16q5qhub9gg707g7jms51")
-//                .getActionsSince(0, new FireBaseServerApi.FireBaseCallback() {
-//                    @Override
-//                    public void onData(Object data) {
-//                        Log.w("custom", "hey2 " + data);
-//                    }
-//                });
-//        FireBaseServerApi.addGroup(("wow"));
-
     }
 
     private void showCreateNewGroupDialog() {
@@ -84,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                         EditText groupName = dialogContent.findViewById(R.id.dialog_create_new_group_groupname);
                         EditText yourName = dialogContent.findViewById(R.id.dialog_create_new_group_yourname);
                         Group newGroup = new Group(groupName.getText().toString());
+                        newGroup.addUser(new User(yourName.getText().toString()));
                         groupNamesAndKeysList.add(new GroupNameAndKey(newGroup.getName(),newGroup.getKey()));
                         DeviceStorageManager.saveGroup(getApplicationContext(), newGroup);
                         DeviceStorageManager.saveGroupNamesAndKeys(getApplicationContext(), groupNamesAndKeysList);
@@ -137,14 +124,14 @@ public class MainActivity extends AppCompatActivity {
                 possitiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final EditText groupKey = dialogContent.findViewById(R.id.dialog_enter_group_key);
-                        cloudApi.getGroupName(groupKey.getText().toString(), new FireBaseServerApi.FireBaseCallback() {
+                        final String groupKey = ((EditText) dialogContent.findViewById(R.id.dialog_enter_group_key)).getText().toString();
+                        cloudApi.getGroupName(groupKey, new FireBaseServerApi.FireBaseCallback() {
                             @Override
                             public void onData(Object data) {
                                 if(data == null) {
                                     showGroupKeyErrorDialog();
                                 } else {
-                                    Group addedGroup = new Group(groupKey.getText().toString(), data.toString());
+                                    Group addedGroup = new Group(groupKey, data.toString());
                                     if(!isGroupAlreadyExist(addedGroup)){
                                         groupNamesAndKeysList.add(new GroupNameAndKey(addedGroup.getName(),addedGroup.getKey()));
                                         DeviceStorageManager.saveGroupNamesAndKeys(getApplicationContext(), groupNamesAndKeysList);

@@ -1,4 +1,4 @@
-package share.fair.fairshare.models;
+package share.fair.fairshare.services;
 
 import android.util.Log;
 

@@ -16,18 +16,18 @@ import java.util.Date;
 import java.util.List;
 
 import share.fair.fairshare.R;
-import share.fair.fairshare.models.Action;
+import share.fair.fairshare.models.PaymentAction;
 
 
-public class GroupActionsHistoryAdapter extends ArrayAdapter<Action> {
+public class GroupActionsHistoryAdapter extends ArrayAdapter<PaymentAction> {
     private Context context;
-    public GroupActionsHistoryAdapter(Context context, List<Action> actions) {
-        super(context, 0, actions);
+    public GroupActionsHistoryAdapter(Context context, List<PaymentAction> paymentActions) {
+        super(context, 0, paymentActions);
         this.context = context;
     }
 
     @Override
-    public Action getItem(int position) {
+    public PaymentAction getItem(int position) {
         return super.getItem(getCount() -1 -position);
     }
 
@@ -41,11 +41,11 @@ public class GroupActionsHistoryAdapter extends ArrayAdapter<Action> {
         }
         TextView time = convertView.findViewById(R.id.layout_group_actions_history_row_time);
         TextView description = convertView.findViewById(R.id.layout_group_actions_history_row_description);
-        Action action = getItem(position);
-        Date timeCreated = new Date(action.getTimeCreated());
+        PaymentAction paymentAction = getItem(position);
+        Date timeCreated = new Date(paymentAction.getTimeCreated());
         DateFormat format = new SimpleDateFormat("dd/MM/yy   HH:mm");
         time.setText(format.format(timeCreated));
-        description.setText(action.getDescription());
+        description.setText(paymentAction.getDescription());
         return convertView;
     }
 }

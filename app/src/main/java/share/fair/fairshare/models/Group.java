@@ -14,7 +14,10 @@ public class Group implements Serializable {
     private String name;
     private String key;
     private List<User> users = new ArrayList<>();
-    private List<Action> actions = new ArrayList<>();
+    private List<PaymentAction> paymentActions = new ArrayList<>();
+
+
+    private long lastSyncTime = 0;
 
 
     public Group(String name) {
@@ -22,6 +25,9 @@ public class Group implements Serializable {
         this.name = name;
     }
 
+    public long getLastSyncTime() {
+        return lastSyncTime;
+    }
     public Group(String key, String name) {
         this.key = key;
         this.name = name;
@@ -31,18 +37,18 @@ public class Group implements Serializable {
         return key;
     }
 
-    public List<Action> getActions() {
-        return actions;
+    public List<PaymentAction> getPaymentActions() {
+        return paymentActions;
     }
 
-    public void addAction(Action action) {
-        this.actions.add(action);
-        this.applyAction(action);
+    public void addAction(PaymentAction paymentAction) {
+        this.paymentActions.add(paymentAction);
+        this.applyAction(paymentAction);
     }
 
-    public void cancelAction(Action action) {
-        action.makeActionUnEditale();
-        addAction(action.getOpositeAction());
+    public void cancelAction(PaymentAction paymentAction) {
+        paymentAction.makeActionUnEditale();
+        addAction(paymentAction.getOpositeAction());
     }
 
     public String getName() {
@@ -73,33 +79,17 @@ public class Group implements Serializable {
     private void clearUserBalance(User userToRemove) {
         double balance = userToRemove.getBalance();
         double splitBalance = - balance / (users.size() -1 ) ;
-        List<Action.Operation> operations = new ArrayList<>();
+        List<PaymentAction.Operation> operations = new ArrayList<>();
         for(User user: users) {
             if(user != userToRemove) {
-                operations.add(new Action.Operation(user.getId(), user.getName(), 0, splitBalance));
+                operations.add(new PaymentAction.Operation(user.getId(), user.getName(), 0, splitBalance));
             } else {
-                operations.add(new Action.Operation(user.getId(), user.getName(), 0, balance));
+                operations.add(new PaymentAction.Operation(user.getId(), user.getName(), 0, balance));
             }
         }
         String description = "Remove " + userToRemove.getName() + " from the group";
-        Action action = new Action(operations,"creatorName",description, false);
-        applyAction(action);
-    }
-
-
-    private List<Action.Operation> test(User userToRemove) {
-        double balance = userToRemove.getBalance();
-        double splitBalance = - balance / (users.size() -1 ) ;
-        List<Action.Operation> operations = new ArrayList<>();
-        for(User user: users) {
-            if(user != userToRemove) {
-                operations.add(new Action.Operation(user.getId(), user.getName(), 0, splitBalance));
-            } else {
-                operations.add(new Action.Operation(user.getId(), user.getName(), 0, balance));
-            }
-        }
-
-        return operations;
+        PaymentAction paymentAction = new PaymentAction(operations,"creatorName",description, false);
+        applyAction(paymentAction);
     }
 
     public void removeUserById(String userId) {
@@ -113,17 +103,17 @@ public class Group implements Serializable {
         this.users.remove(userToRemove);
     }
 
-    private void applyAction(Action action) {
-        for(Action.Operation operation : action.getOperations()) {
+    private void applyAction(PaymentAction paymentAction) {
+        for(PaymentAction.Operation operation : paymentAction.getOperations()) {
             User user = this.findUserById(operation.getUserId());
             user.setBallance(user.getBalance() + operation.getAmountPaid() - operation.getShare());
         }
     }
 
-    public Action getActionById(String id) {
-        for(Action action: this.getActions()) {
-            if(action.getId().equals(id)) {
-                return action;
+    public PaymentAction getActionById(String id) {
+        for(PaymentAction paymentAction : this.getPaymentActions()) {
+            if(paymentAction.getId().equals(id)) {
+                return paymentAction;
             }
         }
         return null;

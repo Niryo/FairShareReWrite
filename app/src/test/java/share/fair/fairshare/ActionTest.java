@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import share.fair.fairshare.models.Action;
+import share.fair.fairshare.models.PaymentAction;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -19,66 +19,66 @@ import static org.junit.Assert.assertThat;
  */
 
 public class ActionTest {
-    private List<Action.Operation> operationList = new ArrayList<>();
+    private List<PaymentAction.Operation> operationList = new ArrayList<>();
 
     @Before
     public void init() {
-        this.operationList.add(new Action.Operation("user1", "user1", 100.0, 50.0));
-        this.operationList.add(new Action.Operation("user2", "user2", 0.0, 50.0));
+        this.operationList.add(new PaymentAction.Operation("user1", "user1", 100.0, 50.0));
+        this.operationList.add(new PaymentAction.Operation("user2", "user2", 0.0, 50.0));
     }
 
     @Test
     public void createNewAction() {
-        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        assertEquals(action.getCreatorName(),"testCreatorName");
-        assertEquals(action.getDescription(),"testDescription");
-        assertEquals(action.isEditable(),true);
-        assertEquals(action.getOperations(), this.operationList);
+        PaymentAction paymentAction = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        assertEquals(paymentAction.getCreatorName(),"testCreatorName");
+        assertEquals(paymentAction.getDescription(),"testDescription");
+        assertEquals(paymentAction.isEditable(),true);
+        assertEquals(paymentAction.getOperations(), this.operationList);
     }
 
     @Test
     public void shouldHaveCreationTimestamp() {
-        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        assertTrue(action.getTimeCreated() + 100  >=  new Date().getTime());
+        PaymentAction paymentAction = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        assertTrue(paymentAction.getTimeCreated() + 100  >=  new Date().getTime());
     }
 
     @Test
     public void shouldHaveUniqueId() {
-        Action action1 = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        Action action2 = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        assertNotEquals(action1.getId(),action2.getId());
+        PaymentAction paymentAction1 = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        PaymentAction paymentAction2 = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        assertNotEquals(paymentAction1.getId(), paymentAction2.getId());
     }
 
     @Test
     public void getOppositeActionShouldContainOppositeOperations() {
-        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        Action oppositeAction = action.getOpositeAction();
-        assertEquals(oppositeAction.getOperations().get(0).getAmountPaid(), -100.0, 0.001);
-        assertEquals(oppositeAction.getOperations().get(0).getShare(), -50.0, 0.001);
-        assertEquals(oppositeAction.getOperations().get(1).getAmountPaid(), 0.0, 0.001);
-        assertEquals(oppositeAction.getOperations().get(1).getShare(), -50.0, 0.001);
-        assertEquals(oppositeAction.getDescription(), action.getDescription() +" (cancelled)");
+        PaymentAction paymentAction = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        PaymentAction oppositePaymentAction = paymentAction.getOpositeAction();
+        assertEquals(oppositePaymentAction.getOperations().get(0).getAmountPaid(), -100.0, 0.001);
+        assertEquals(oppositePaymentAction.getOperations().get(0).getShare(), -50.0, 0.001);
+        assertEquals(oppositePaymentAction.getOperations().get(1).getAmountPaid(), 0.0, 0.001);
+        assertEquals(oppositePaymentAction.getOperations().get(1).getShare(), -50.0, 0.001);
+        assertEquals(oppositePaymentAction.getDescription(), paymentAction.getDescription() +" (cancelled)");
     }
     @Test
     public void oppositeActionShouldContainCancelInDescription() {
-        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        Action oppositeAction = action.getOpositeAction();
-        assertEquals(oppositeAction.getDescription(), action.getDescription() +" (cancelled)");
+        PaymentAction paymentAction = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        PaymentAction oppositePaymentAction = paymentAction.getOpositeAction();
+        assertEquals(oppositePaymentAction.getDescription(), paymentAction.getDescription() +" (cancelled)");
     }
     @Test
     public void oppositeActionShouldBeUnEditable() {
-        Action action = new Action(this.operationList,"testCreatorName", "testDescription", true);
-        Action oppositeAction = action.getOpositeAction();
-        assertEquals(oppositeAction.isEditable(), false);
+        PaymentAction paymentAction = new PaymentAction(this.operationList,"testCreatorName", "testDescription", true);
+        PaymentAction oppositePaymentAction = paymentAction.getOpositeAction();
+        assertEquals(oppositePaymentAction.isEditable(), false);
     }
     @Test
     public void oppositeActionShouldShouldNotHavAutoCalculatedShare() {
-        List<Action.Operation> operationListWithAutoCalculatedShare = new ArrayList<>();
-        operationListWithAutoCalculatedShare.add(new Action.Operation("user1", "user1", 100.0, 50.0, true));
-        operationListWithAutoCalculatedShare.add(new Action.Operation("user2", "user2", 0.0, 50.0, true));
-        Action action = new Action(operationListWithAutoCalculatedShare,"testCreatorName", "testDescription", true);
-        Action oppositeAction = action.getOpositeAction();
-        assertEquals(oppositeAction.getOperations().get(0).isShareAutoCalculated(), false);
-        assertEquals(oppositeAction.getOperations().get(1).isShareAutoCalculated(), false);
+        List<PaymentAction.Operation> operationListWithAutoCalculatedShare = new ArrayList<>();
+        operationListWithAutoCalculatedShare.add(new PaymentAction.Operation("user1", "user1", 100.0, 50.0, true));
+        operationListWithAutoCalculatedShare.add(new PaymentAction.Operation("user2", "user2", 0.0, 50.0, true));
+        PaymentAction paymentAction = new PaymentAction(operationListWithAutoCalculatedShare,"testCreatorName", "testDescription", true);
+        PaymentAction oppositePaymentAction = paymentAction.getOpositeAction();
+        assertEquals(oppositePaymentAction.getOperations().get(0).isShareAutoCalculated(), false);
+        assertEquals(oppositePaymentAction.getOperations().get(1).isShareAutoCalculated(), false);
     }
 }

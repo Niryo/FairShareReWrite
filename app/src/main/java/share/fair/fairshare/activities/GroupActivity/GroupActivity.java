@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 
 import share.fair.fairshare.models.User;
 import share.fair.fairshare.services.DeviceStorageManager;
+import share.fair.fairshare.services.FireBaseServerApi;
 import share.fair.fairshare.views.GroupActionsHistoryView.GroupActionsHistoryView;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
@@ -42,6 +44,7 @@ public class GroupActivity extends AppCompatActivity {
         ActivityGroupBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_group);
         String groupKey = getIntent().getStringExtra(GROUP_KEY_EXTRA);
         this.group = DeviceStorageManager.readGroup(getApplicationContext(), groupKey);
+        this.fetchGroupActionsInBackground();
         binding.groupActivityActionBar.setTitle(group.getName());
         setSupportActionBar(binding.groupActivityActionBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -145,5 +148,19 @@ public class GroupActivity extends AppCompatActivity {
                     }
                 }).create().show();
 
+    }
+
+    private void fetchGroupActionsInBackground(){
+        new Thread(new Runnable() {
+            public void run(){
+                ((AppActivity)getApplication()).cloudApi.getActionsSince(group.getLastSyncTime(), group.getKey(), new FireBaseServerApi.FireBaseCallback() {
+                    @Override
+                    public void onData(Object data) {
+                        Log.d("nir", "hello world");
+                        Log.d("nir", data.toString());
+                    }
+                });
+            }
+        }).start();
     }
 }

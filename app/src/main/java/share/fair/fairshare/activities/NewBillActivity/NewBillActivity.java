@@ -17,8 +17,8 @@ import java.util.List;
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.GroupActivity.GroupActivity;
 import share.fair.fairshare.databinding.ActivityNewBillBinding;
-import share.fair.fairshare.models.Action;
-import share.fair.fairshare.models.Calculator;
+import share.fair.fairshare.models.PaymentAction;
+import share.fair.fairshare.services.Calculator;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.services.DeviceStorageManager;
 
@@ -32,7 +32,7 @@ public class NewBillActivity extends AppCompatActivity {
     private ActivityNewBillBinding binding;
     private double autoShare = 0.0;
     private boolean isEditMode = false;
-    private Action actionToEdit = null;
+    private PaymentAction paymentActionToEdit = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class NewBillActivity extends AppCompatActivity {
         this.binding.newBillActivityBlockTouchOverlay.requestFocus();
         String actionIdToEdit = getIntent().getStringExtra(ACTION_TO_EDIT_ID);
         if (actionIdToEdit != null) {
-            actionToEdit = this.group.getActionById(actionIdToEdit);
-            binding.newBillActivityBillDescription.setText(actionToEdit.getDescription());
+            paymentActionToEdit = this.group.getActionById(actionIdToEdit);
+            binding.newBillActivityBillDescription.setText(paymentActionToEdit.getDescription());
         } else {
             this.enterEditMode();
         }
@@ -51,9 +51,9 @@ public class NewBillActivity extends AppCompatActivity {
         this.initActionBar();
     }
 
-    private List<UserInvolvedInBill> getUsersInvolvedInBillFromAction(Action action) {
+    private List<UserInvolvedInBill> getUsersInvolvedInBillFromAction(PaymentAction paymentAction) {
         List<UserInvolvedInBill> usersInvolvedInBill = new ArrayList<>();
-        for (Action.Operation operation : action.getOperations()) {
+        for (PaymentAction.Operation operation : paymentAction.getOperations()) {
             String userId = operation.getUserId();
             String userName = group.findUserById(userId).getName();
             String amountPaid = "";
@@ -141,11 +141,11 @@ public class NewBillActivity extends AppCompatActivity {
     }
 
     private void createBill() {
-        if((actionToEdit!= null)){
-            group.cancelAction(actionToEdit);
+        if((paymentActionToEdit != null)){
+            group.cancelAction(paymentActionToEdit);
         }
 
-        List<Action.Operation> operations = new ArrayList<>();
+        List<PaymentAction.Operation> operations = new ArrayList<>();
         for (NewBillRowViewHolder viewHolder : this.billRows) {
             double amountPaid = this.readAmountPaid(viewHolder);
             double share = this.readShare(viewHolder);
@@ -154,10 +154,10 @@ public class NewBillActivity extends AppCompatActivity {
                 share = this.autoShare;
             }
             //todo: clean this userNameShit
-            operations.add(new Action.Operation(viewHolder.userId, viewHolder.userName.getText().toString(), amountPaid, share, isShareAutoCalculated));
+            operations.add(new PaymentAction.Operation(viewHolder.userId, viewHolder.userName.getText().toString(), amountPaid, share, isShareAutoCalculated));
         }
         String description = this.binding.newBillActivityBillDescription.getText().toString();
-        this.group.addAction(new Action(operations, "testCreatorName", description, true));
+        this.group.addAction(new PaymentAction(operations, "testCreatorName", description, true));
     }
 
     @Override
@@ -169,7 +169,7 @@ public class NewBillActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.new_bill_activity_action_bar_create_mode, menu);
-        if(this.actionToEdit != null && !this.actionToEdit.isEditable()) {
+        if(this.paymentActionToEdit != null && !this.paymentActionToEdit.isEditable()) {
             menu.findItem(R.id.new_bill_activity_action_bar_done).setVisible(false);
             menu.findItem(R.id.new_bill_activity_action_bar_edit).setVisible(false);
         } else if (this.isEditMode) {
