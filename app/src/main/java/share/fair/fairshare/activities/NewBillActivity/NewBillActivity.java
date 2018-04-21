@@ -42,7 +42,7 @@ public class NewBillActivity extends AppCompatActivity {
         this.binding.newBillActivityBlockTouchOverlay.requestFocus();
         String actionIdToEdit = getIntent().getStringExtra(ACTION_TO_EDIT_ID);
         if (actionIdToEdit != null) {
-            paymentActionToEdit = this.group.getActionById(actionIdToEdit);
+            paymentActionToEdit = this.group.getPaymentActionById(actionIdToEdit);
             binding.newBillActivityBillDescription.setText(paymentActionToEdit.getDescription());
         } else {
             this.enterEditMode();
@@ -157,7 +157,7 @@ public class NewBillActivity extends AppCompatActivity {
             operations.add(new PaymentAction.Operation(viewHolder.userId, viewHolder.userName.getText().toString(), amountPaid, share, isShareAutoCalculated));
         }
         String description = this.binding.newBillActivityBillDescription.getText().toString();
-        this.group.addAction(new PaymentAction(operations, "testCreatorName", description, true));
+        this.group.addPaymentAction(new PaymentAction(operations, "testCreatorName", description, true));
     }
 
     @Override

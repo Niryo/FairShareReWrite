@@ -5,5 +5,6 @@ package share.fair.fairshare.Constants;
  */
 
 public class GroupActionTypes {
-    public static String PAYMENT_ACTION = "NEW_ACTION";
+    public static String NEW_PAYMENT_ACTION = "NEW_ACTION";
+    public static String USER_ADDED_ACTION = "USER_ADDED";
 }

@@ -9,7 +9,7 @@ import share.fair.fairshare.interfaces.IGroupAction;
 
 public class GroupActions {
     public static class NewPaymentAction implements IGroupAction {
-        public String type = GroupActionTypes.PAYMENT_ACTION;
+        private final String type = GroupActionTypes.NEW_PAYMENT_ACTION;
         public String id;
         public long timeStamp;
         public String installationId;
@@ -20,6 +20,31 @@ public class GroupActions {
             this.timeStamp = timeStamp;
             this.installationId = installationId;
             this.paymentAction = paymentAction;
+        }
+
+        @Override
+        public String getType() {
+            return this.type;
+        }
+    }
+
+    public static class AddUserAction implements IGroupAction {
+        private final String type = GroupActionTypes.USER_ADDED_ACTION;
+        public String id;
+        public String installationId;
+        public long timeStamp;
+        public String userName;
+
+        public AddUserAction(String id, long timeStamp,String installationId, String userName) {
+            this.id = id;
+            this.installationId = installationId;
+            this.timeStamp = timeStamp;
+            this.userName = userName;
+        }
+
+        @Override
+        public String getType() {
+            return this.type;
         }
     }
 }

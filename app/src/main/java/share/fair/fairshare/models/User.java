@@ -17,10 +17,10 @@ public class User implements Serializable{
         this.ballance = ballance;
     }
 
-    public User(String id, String name, Double ballance) {
+    public User(String id, String name) {
         this.id = id;
         this.name = name;
-        this.ballance = ballance;
+        this.ballance = 0.0;
     }
     public User(String name) {
         this.id = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 6);

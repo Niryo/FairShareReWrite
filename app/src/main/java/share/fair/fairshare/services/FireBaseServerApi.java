@@ -30,6 +30,8 @@ public class FireBaseServerApi {
         public static String TIME_STEMP = "timeStamp";
         public static String GROUP_ACTION_TYPE = "action";
         public static String ACTION_ID = "actionId";
+        public static String USER_ID = "userId";
+        public static String USER_NAME = "userName";
         public static String INSTALLATION_ID = "installationId";
         public static String JSON_PAYMENT_ACTION = "jsonAction";
     }
@@ -58,15 +60,17 @@ public class FireBaseServerApi {
                 .child(groupKey)
                 .child(DataBaseNodes.GROUP_ACTIONS)
                 .orderByChild(DataBaseNodes.TIME_STEMP)
-                .startAt(timeStamp)
+                .startAt(timeStamp, "fakeKeyToMakeTheStartAtNonInclusive")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         List<IGroupAction> groupActions = new ArrayList<>();
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
                             String groupActionType = child.child(DataBaseNodes.GROUP_ACTION_TYPE).getValue().toString();
-                            if (groupActionType.equals(GroupActionTypes.PAYMENT_ACTION)) {
+                            if (groupActionType.equals(GroupActionTypes.NEW_PAYMENT_ACTION)) {
                                 groupActions.add(getNewPaymentAction(child));
+                            } else if(groupActionType.equals(GroupActionTypes.USER_ADDED_ACTION)) {
+                                groupActions.add(getAddUserAction(child));
                             }
                         }
                         callback.onData(groupActions);
@@ -93,6 +97,15 @@ public class FireBaseServerApi {
         PaymentAction paymentAction = new PaymentAction(jsonObject);
         return new GroupActions.NewPaymentAction(id, timeStamp, installationId, paymentAction);
     }
+
+    private GroupActions.AddUserAction getAddUserAction(DataSnapshot dataSnapshot){
+        String id = dataSnapshot.child(DataBaseNodes.USER_ID).getValue().toString();
+        String installationId = dataSnapshot.child(DataBaseNodes.INSTALLATION_ID).getValue().toString();
+        String userName = dataSnapshot.child(DataBaseNodes.USER_NAME).getValue().toString();
+        long timeStamp = Long.parseLong(dataSnapshot.child(DataBaseNodes.TIME_STEMP).getValue().toString());
+        return new GroupActions.AddUserAction(id, timeStamp, installationId, userName);
+    }
+
 
     public void getGroupName(String key, final FireBaseCallback callback) {
         FirebaseDatabase.getInstance()

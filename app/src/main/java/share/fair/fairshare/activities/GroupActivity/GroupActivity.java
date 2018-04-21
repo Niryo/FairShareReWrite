@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
+import java.util.List;
+
+import share.fair.fairshare.interfaces.IGroupAction;
 import share.fair.fairshare.models.User;
 import share.fair.fairshare.services.DeviceStorageManager;
 import share.fair.fairshare.services.FireBaseServerApi;
@@ -156,8 +159,9 @@ public class GroupActivity extends AppCompatActivity {
                 ((AppActivity)getApplication()).cloudApi.getActionsSince(group.getLastSyncTime(), group.getKey(), new FireBaseServerApi.FireBaseCallback() {
                     @Override
                     public void onData(Object data) {
-                        Log.d("nir", "hello world");
-                        Log.d("nir", data.toString());
+                        group.consumeGroupAction((List<IGroupAction>) data);
+                        DeviceStorageManager.saveGroup(getApplicationContext(), group);
+                        groupDetailsView.notifyAdapterChange();
                     }
                 });
             }

@@ -7,5 +7,5 @@ import share.fair.fairshare.Constants.GroupActionTypes;
  */
 
 public interface IGroupAction {
-    public String type = null;
+    public String getType();
 }

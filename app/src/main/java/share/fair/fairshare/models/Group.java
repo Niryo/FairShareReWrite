@@ -1,10 +1,15 @@
 package share.fair.fairshare.models;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+
+import share.fair.fairshare.Constants.GroupActionTypes;
+import share.fair.fairshare.interfaces.IGroupAction;
 
 /**
  * Created by niryo on 28/09/2017.
@@ -41,14 +46,14 @@ public class Group implements Serializable {
         return paymentActions;
     }
 
-    public void addAction(PaymentAction paymentAction) {
+    public void addPaymentAction(PaymentAction paymentAction) {
         this.paymentActions.add(paymentAction);
-        this.applyAction(paymentAction);
+        this.applyPaymentAction(paymentAction);
     }
 
     public void cancelAction(PaymentAction paymentAction) {
         paymentAction.makeActionUnEditale();
-        addAction(paymentAction.getOpositeAction());
+        addPaymentAction(paymentAction.getOpositeAction());
     }
 
     public String getName() {
@@ -89,7 +94,7 @@ public class Group implements Serializable {
         }
         String description = "Remove " + userToRemove.getName() + " from the group";
         PaymentAction paymentAction = new PaymentAction(operations,"creatorName",description, false);
-        applyAction(paymentAction);
+        applyPaymentAction(paymentAction);
     }
 
     public void removeUserById(String userId) {
@@ -103,19 +108,35 @@ public class Group implements Serializable {
         this.users.remove(userToRemove);
     }
 
-    private void applyAction(PaymentAction paymentAction) {
+    private void applyPaymentAction(PaymentAction paymentAction) {
         for(PaymentAction.Operation operation : paymentAction.getOperations()) {
             User user = this.findUserById(operation.getUserId());
             user.setBallance(user.getBalance() + operation.getAmountPaid() - operation.getShare());
         }
     }
 
-    public PaymentAction getActionById(String id) {
+    private void applyAddUserAction(GroupActions.AddUserAction addUserAction){
+        User newUser = new User(addUserAction.id, addUserAction.userName);
+        this.addUser(newUser);
+        this.lastSyncTime = addUserAction.timeStamp;
+    }
+
+    public PaymentAction getPaymentActionById(String id) {
         for(PaymentAction paymentAction : this.getPaymentActions()) {
             if(paymentAction.getId().equals(id)) {
                 return paymentAction;
             }
         }
         return null;
+    }
+
+    public void consumeGroupAction(List<IGroupAction> groupActions){
+        for(IGroupAction groupAction : groupActions ) {
+            Log.d("nir", "action type: " + groupAction.getType());
+            if (groupAction.getType().equals(GroupActionTypes.USER_ADDED_ACTION)) {
+                this.applyAddUserAction((GroupActions.AddUserAction) groupAction);
+            }
+
+        }
     }
 }
