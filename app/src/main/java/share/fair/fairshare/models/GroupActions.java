@@ -26,6 +26,30 @@ public class GroupActions {
         public String getType() {
             return this.type;
         }
+
+        @Override
+        public long getTimestamp() {
+            return this.timeStamp;
+        }
+    }
+
+    public static class UpdateLastSyncTimestampAction implements IGroupAction {
+        private final String type = GroupActionTypes.UPDATE_LAST_SYNC_TIMESTAMP;
+        public long timeStamp;
+
+        public UpdateLastSyncTimestampAction(long timeStamp) {
+            this.timeStamp = timeStamp;
+        }
+
+        @Override
+        public String getType() {
+            return this.type;
+        }
+
+        @Override
+        public long getTimestamp() {
+            return this.timeStamp;
+        }
     }
 
     public static class AddUserAction implements IGroupAction {
@@ -45,6 +69,11 @@ public class GroupActions {
         @Override
         public String getType() {
             return this.type;
+        }
+
+        @Override
+        public long getTimestamp() {
+            return this.timeStamp;
         }
     }
 }

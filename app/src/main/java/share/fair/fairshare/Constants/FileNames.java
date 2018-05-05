@@ -6,4 +6,5 @@ package share.fair.fairshare.Constants;
 
 public class FileNames {
     public static String GROUP_NAMES_AND_KEYS = "groupNamesAndKeys";
+    public static String SHARED_PREFERENCES = "fair.share.shared_preferences";
 }

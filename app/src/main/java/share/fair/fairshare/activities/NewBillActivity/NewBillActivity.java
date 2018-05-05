@@ -1,22 +1,25 @@
 package share.fair.fairshare.activities.NewBillActivity;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import share.fair.fairshare.R;
+import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.activities.GroupActivity.GroupActivity;
-import share.fair.fairshare.databinding.ActivityNewBillBinding;
 import share.fair.fairshare.models.PaymentAction;
 import share.fair.fairshare.services.Calculator;
 import share.fair.fairshare.models.Group;
@@ -29,21 +32,25 @@ public class NewBillActivity extends AppCompatActivity {
 
     private List<NewBillRowViewHolder> billRows = new ArrayList<>();
     private Group group;
-    private ActivityNewBillBinding binding;
     private double autoShare = 0.0;
     private boolean isEditMode = false;
     private PaymentAction paymentActionToEdit = null;
+    private View blockTouchOverlayView;
+    private EditText billDescriptionEditText;
+    private View billActivityContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_bill);
+        this.blockTouchOverlayView = findViewById(R.id.new_bill_activity_block_touch_overlay);
+        this.billDescriptionEditText = (EditText) findViewById(R.id.new_bill_activity_bill_description);
         this.group = DeviceStorageManager.readGroup(getApplicationContext() ,getIntent().getStringExtra(GROUP_KEY_EXTRA));
-        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_new_bill);
-        this.binding.newBillActivityBlockTouchOverlay.requestFocus();
+        this.blockTouchOverlayView.requestFocus();
         String actionIdToEdit = getIntent().getStringExtra(ACTION_TO_EDIT_ID);
         if (actionIdToEdit != null) {
             paymentActionToEdit = this.group.getPaymentActionById(actionIdToEdit);
-            binding.newBillActivityBillDescription.setText(paymentActionToEdit.getDescription());
+            this.billDescriptionEditText.setText(paymentActionToEdit.getDescription());
         } else {
             this.enterEditMode();
         }
@@ -71,14 +78,15 @@ public class NewBillActivity extends AppCompatActivity {
 
     private void enterEditMode() {
         this.isEditMode = true;
-        this.binding.newBillActivityBlockTouchOverlay.setVisibility(View.INVISIBLE);
-        this.binding.newBillActivityContainer.setAlpha(1);
-        this.binding.newBillActivityBillDescription.requestFocus();
+        this.blockTouchOverlayView.setVisibility(View.INVISIBLE);
+        findViewById(R.id.new_bill_activity_container).setAlpha(1);
+        this.billDescriptionEditText.requestFocus();
     }
 
     private void initActionBar() {
-        binding.newBillActivityActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        setSupportActionBar(binding.newBillActivityActionBar);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.new_bill_activity_action_bar);
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        setSupportActionBar(toolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -135,7 +143,7 @@ public class NewBillActivity extends AppCompatActivity {
             rowViewHolder.share.setText(userInvolvedInBill.share);
             rowViewHolder.share.addTextChangedListener(new TextChangeListener());
             billRows.add(rowViewHolder);
-            this.binding.newBillActivityList.addView(inflatedRow);
+            ((LinearLayout)findViewById(R.id.new_bill_activity_list)).addView(inflatedRow);
             updateShares();
         }
     }
@@ -156,8 +164,11 @@ public class NewBillActivity extends AppCompatActivity {
             //todo: clean this userNameShit
             operations.add(new PaymentAction.Operation(viewHolder.userId, viewHolder.userName.getText().toString(), amountPaid, share, isShareAutoCalculated));
         }
-        String description = this.binding.newBillActivityBillDescription.getText().toString();
-        this.group.addPaymentAction(new PaymentAction(operations, "testCreatorName", description, true));
+        String description = this.billDescriptionEditText.getText().toString();
+        PaymentAction newPaymentAction = new PaymentAction(operations, "testCreatorName", description, true);
+        this.group.addPaymentAction(newPaymentAction);
+        ((AppActivity)getApplication()).cloudApi.savePaymentAction(group, newPaymentAction);
+        DeviceStorageManager.saveGroup(getBaseContext(), group);
     }
 
     @Override

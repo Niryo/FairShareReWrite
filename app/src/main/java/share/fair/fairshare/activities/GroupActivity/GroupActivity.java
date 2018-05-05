@@ -2,14 +2,14 @@ package share.fair.fairshare.activities.GroupActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +28,6 @@ import share.fair.fairshare.views.GroupActionsHistoryView.GroupActionsHistoryVie
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.views.GroupDetailsView.GroupDetailsView;
-import share.fair.fairshare.databinding.ActivityGroupBinding;
 import share.fair.fairshare.models.Group;
 
 /**
@@ -44,15 +43,16 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityGroupBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_group);
+        setContentView(R.layout.activity_group);
         String groupKey = getIntent().getStringExtra(GROUP_KEY_EXTRA);
         this.group = DeviceStorageManager.readGroup(getApplicationContext(), groupKey);
         this.fetchGroupActionsInBackground();
-        binding.groupActivityActionBar.setTitle(group.getName());
-        setSupportActionBar(binding.groupActivityActionBar);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.group_activity_action_bar);
+        toolBar.setTitle(group.getName());
+        setSupportActionBar(toolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        binding.groupActivityActionBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         viewPager = (ViewPager) findViewById(R.id.group_activity_viewpager);
         setupViewPager(viewPager);
 
@@ -145,7 +145,10 @@ public class GroupActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         EditText userName = dialogContent.findViewById(R.id.dialog_create_new_user_username);
-                        group.createUser(userName.getText().toString());
+                        User newUser = new User(userName.getText().toString());
+                        group.addUser(newUser);
+                        DeviceStorageManager.saveGroup(getBaseContext(), group);
+                        ((AppActivity) getApplication()).cloudApi.saveAddUserAction(group,newUser);
 //                        ((BaseAdapter) usersListView.getAdapter()).notifyDataSetChanged();
                         groupDetailsView.notifyAdapterChange();
                     }
@@ -156,7 +159,7 @@ public class GroupActivity extends AppCompatActivity {
     private void fetchGroupActionsInBackground(){
         new Thread(new Runnable() {
             public void run(){
-                ((AppActivity)getApplication()).cloudApi.getActionsSince(group.getLastSyncTime(), group.getKey(), new FireBaseServerApi.FireBaseCallback() {
+                ((AppActivity)getApplication()).cloudApi.getActionsSince(group, new FireBaseServerApi.FireBaseCallback() {
                     @Override
                     public void onData(Object data) {
                         group.consumeGroupAction((List<IGroupAction>) data);

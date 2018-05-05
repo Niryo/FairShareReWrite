@@ -2,11 +2,10 @@ package share.fair.fairshare.activities.MainActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,11 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
 import java.util.List;
+
 import share.fair.fairshare.R;
 import share.fair.fairshare.activities.AppActivity;
 import share.fair.fairshare.activities.GroupActivity.GroupActivity;
-import share.fair.fairshare.databinding.ActivityMainBinding;
 import share.fair.fairshare.models.Group;
 import share.fair.fairshare.models.GroupNameAndKey;
 import share.fair.fairshare.models.User;
@@ -39,11 +39,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         this.cloudApi = ((AppActivity) getApplication()).cloudApi;
         this.groupNamesAndKeysList = DeviceStorageManager.readGroupNamesAndKeys(this);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        setSupportActionBar(binding.mainActivityActionBar);
-        this.groupsNamesListView = binding.mainActivityList;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_action_bar);
+        setSupportActionBar(toolbar);
+        this.groupsNamesListView = (ListView) findViewById(R.id.main_activity_list);
         GroupNamesAdapter adapter = new GroupNamesAdapter(this, this.groupNamesAndKeysList);
         this.groupsNamesListView.setAdapter(adapter);
         registerForContextMenu(this.groupsNamesListView);
@@ -69,11 +70,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         EditText groupName = dialogContent.findViewById(R.id.dialog_create_new_group_groupname);
                         EditText yourName = dialogContent.findViewById(R.id.dialog_create_new_group_yourname);
+                        User newUser = new User(yourName.getText().toString());
                         Group newGroup = new Group(groupName.getText().toString());
-                        newGroup.addUser(new User(yourName.getText().toString()));
+                        newGroup.addUser(newUser);
                         groupNamesAndKeysList.add(new GroupNameAndKey(newGroup.getName(),newGroup.getKey()));
                         DeviceStorageManager.saveGroup(getApplicationContext(), newGroup);
                         DeviceStorageManager.saveGroupNamesAndKeys(getApplicationContext(), groupNamesAndKeysList);
+                        cloudApi.saveAddUserAction(newGroup, newUser);
                         cloudApi.addGroup(newGroup.getKey(),newGroup.getName());
                         ((BaseAdapter) groupsNamesListView.getAdapter()).notifyDataSetChanged();
                     }

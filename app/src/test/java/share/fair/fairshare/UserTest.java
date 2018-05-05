@@ -19,14 +19,6 @@ public class UserTest {
     }
 
     @Test
-    public void createNewUserWithData() {
-        User user = new User("testId","testName", 88.500);
-        assertEquals(user.getId(), "testId");
-        assertEquals(user.getName(), "testName");
-        assertEquals(user.getBalance(), 88.500);
-    }
-
-    @Test
     public void newUserShouldHaveAUniqueId() {
         User user1 = new User("testName");
         User user2 = new User("testName");

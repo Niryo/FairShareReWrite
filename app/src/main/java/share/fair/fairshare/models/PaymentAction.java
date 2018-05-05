@@ -62,6 +62,27 @@ public class PaymentAction implements Serializable{
         return timeCreated;
     }
 
+
+    public JSONObject toJson(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("isEditable", this.isEditable);
+            jsonObject.put("description", this.description);
+            jsonObject.put("timeStamp", this.timeCreated);
+            jsonObject.put("actionId", this.id);
+            jsonObject.put("creatorName", this.creatorName);
+            jsonObject.put("installationId", this.creatorInstallationId);
+            JSONArray jsonOperations = new JSONArray();
+            for (Operation operation : operations) {
+                jsonOperations.put(operation.toJSON());
+            }
+            jsonObject.put("operations", jsonOperations);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
     public PaymentAction(List<Operation> operations, String creatorName, String description, boolean isEditable){
         this.id = new BigInteger(130, new SecureRandom()).toString(32).substring(0, 10);
         this.timeCreated = new Date().getTime();
@@ -80,7 +101,6 @@ public class PaymentAction implements Serializable{
             this.timeCreated = jsonAction.getLong("timeStamp");
             this.id = jsonAction.getString("actionId");
             this.creatorName = jsonAction.getString("creatorName");
-            this.creatorInstallationId=jsonAction.getString("installationId");
             JSONArray jsonOperations = jsonAction.getJSONArray("operations");
             for (int i = 0; i < jsonOperations.length(); i++) {
                 operations.add(new Operation(jsonOperations.getJSONObject(i)));
@@ -147,5 +167,19 @@ public class PaymentAction implements Serializable{
             return share;
         }
 
-    }
+        public JSONObject toJSON() {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("hasUserAddedShare", !this.isShareAutoCalculated);
+                jsonObject.put("username", this.userName);
+                jsonObject.put("userId", this.userId);
+                jsonObject.put("paid", this.amountPaid);
+                jsonObject.put("share", this.share);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject;
+        }
+
+        }
 }

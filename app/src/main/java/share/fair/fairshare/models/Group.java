@@ -20,14 +20,18 @@ public class Group implements Serializable {
     private String key;
     private List<User> users = new ArrayList<>();
     private List<PaymentAction> paymentActions = new ArrayList<>();
-
-
     private long lastSyncTime = 0;
+    private String groupInstallationId;
 
 
     public Group(String name) {
         this.key = new BigInteger(130, new SecureRandom()).toString(32);
+        this.groupInstallationId = new BigInteger(130, new SecureRandom()).toString(32);
         this.name = name;
+    }
+
+    public String getGroupInstallationId(){
+        return this.groupInstallationId;
     }
 
     public long getLastSyncTime() {
@@ -36,6 +40,7 @@ public class Group implements Serializable {
     public Group(String key, String name) {
         this.key = key;
         this.name = name;
+        this.groupInstallationId = new BigInteger(130, new SecureRandom()).toString(32);
     }
 
     public String getKey() {
@@ -62,9 +67,9 @@ public class Group implements Serializable {
     public List<User> getUsers() {
         return users;
     }
+
     public void addUser(User user) {
         this.users.add(user);
-
     }
 
     public void createUser(String userName){
@@ -121,6 +126,7 @@ public class Group implements Serializable {
         this.lastSyncTime = addUserAction.timeStamp;
     }
 
+
     public PaymentAction getPaymentActionById(String id) {
         for(PaymentAction paymentAction : this.getPaymentActions()) {
             if(paymentAction.getId().equals(id)) {
@@ -130,13 +136,20 @@ public class Group implements Serializable {
         return null;
     }
 
+    private void updateLastSyncTime(long timestamp){
+        this.lastSyncTime = timestamp;
+    }
+
     public void consumeGroupAction(List<IGroupAction> groupActions){
         for(IGroupAction groupAction : groupActions ) {
             Log.d("nir", "action type: " + groupAction.getType());
             if (groupAction.getType().equals(GroupActionTypes.USER_ADDED_ACTION)) {
                 this.applyAddUserAction((GroupActions.AddUserAction) groupAction);
+            } else if(groupAction.getType().equals(GroupActionTypes.NEW_PAYMENT_ACTION)){
+                Log.d("nir", "apply payment action");
+                this.addPaymentAction(((GroupActions.NewPaymentAction) groupAction).paymentAction);
             }
-
+            this.lastSyncTime = groupAction.getTimestamp();
         }
     }
 }

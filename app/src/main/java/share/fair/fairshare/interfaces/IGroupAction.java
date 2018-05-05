@@ -8,4 +8,5 @@ import share.fair.fairshare.Constants.GroupActionTypes;
 
 public interface IGroupAction {
     public String getType();
+    public long getTimestamp();
 }
