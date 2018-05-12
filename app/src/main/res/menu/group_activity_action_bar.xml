@@ -13,7 +13,9 @@
 
     <item
         android:title="@string/group_activity_action_bar_menu_show_group_key"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        android:id="@+id/group_activity_action_bar_show_group_key"
+        />
 
     <item
         android:title="@string/group_activity_action_bar_menu_invite"

@@ -19,6 +19,7 @@
     <string name="cancel">Cancel</string>
     <string name="Dismiss">Dismiss</string>
     <string name="create">Create</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="join">Join</string>
     <string name="remove">Remove</string>
     <string name="create_new_group">Create new group</string>
@@ -31,6 +32,7 @@
     <string name="remove_user">Remove person</string>
     <string name="remove_group">Remove group</string>
     <string name="wait">Wait!</string>
+    <string name="group_key">Group key</string>
     <string name="remove_group_message">Do you really want to remove %1$s?</string>
     <string name="paid">Paid</string>
     <string name="share">Share</string>

@@ -1,5 +1,8 @@
 package share.fair.fairshare.activities.GroupActivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -96,6 +101,25 @@ public class GroupActivity extends AppCompatActivity {
             case R.id.group_activity_action_bar_add_user:
                 this.showCreateUserDialog();
                 return true;
+
+            case R.id.group_activity_action_bar_show_group_key:
+                AlertDialog.Builder showGroupKeyDialogBuilder = new AlertDialog.Builder(this);
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("group key",group.getKey());
+                clipboard.setPrimaryClip(clip);
+                showGroupKeyDialogBuilder
+                        .setTitle(R.string.group_key)
+                        .setMessage(this.group.getKey())
+                        .setPositiveButton(R.string.copy_to_clipboard, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getBaseContext(), "Group key has been copied to clipboard",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .create()
+                        .show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -109,6 +133,7 @@ public class GroupActivity extends AppCompatActivity {
 
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Log.d("nir","" + item.getItemId() );
         switch(item.getItemId()) {
             case R.id.group_details_view_remove_user:
                 final User userToRemove = group.getUsers().get(info.position);
@@ -116,8 +141,8 @@ public class GroupActivity extends AppCompatActivity {
                         + userToRemove.getName() +
                         " from the group?\n" +
                         "(All user's debts within the group will be settled up)";
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.wait)
+                AlertDialog.Builder removeUserDialogBuilder = new AlertDialog.Builder(this);
+                removeUserDialogBuilder.setTitle(R.string.wait)
                         .setMessage(message)
                         .setNegativeButton(R.string.cancel,null)
                         .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
