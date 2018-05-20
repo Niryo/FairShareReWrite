@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -56,6 +57,8 @@ public class GroupActionsHistoryView extends LinearLayout {
             }
         });
     }
-
+    public void notifyAdapterChange() {
+        ((BaseAdapter) this.listView.getAdapter()).notifyDataSetChanged();
+    }
 
 }

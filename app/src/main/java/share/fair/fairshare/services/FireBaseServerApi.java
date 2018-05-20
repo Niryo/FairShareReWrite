@@ -77,6 +77,8 @@ public class FireBaseServerApi {
                                 groupActions.add(getNewPaymentAction(child));
                             } else if(groupActionType.equals(GroupActionTypes.USER_ADDED_ACTION)) {
                                 groupActions.add(getAddUserAction(child));
+                            } else if(groupActionType.equals(GroupActionTypes.CANCEL_ACTION)){
+                                groupActions.add(getCancelAction(child));
                             }
                         }
                         callback.onData(groupActions);
@@ -117,6 +119,13 @@ public class FireBaseServerApi {
         return new GroupActions.AddUserAction(id, timeStamp, installationId, userName);
     }
 
+    private GroupActions.CancelAction getCancelAction(DataSnapshot dataSnapshot){
+        String id = dataSnapshot.child(DataBaseNodes.ACTION_ID).getValue().toString();
+        String installationId = dataSnapshot.child(DataBaseNodes.INSTALLATION_ID).getValue().toString();
+        long timeStamp = Long.parseLong(dataSnapshot.child(DataBaseNodes.TIME_STEMP).getValue().toString());
+        return new GroupActions.CancelAction(id, timeStamp, installationId);
+    }
+
     public void saveAddUserAction(Group group, User user) {
         Map<String, Object> addUserAction = new HashMap<>();
         addUserAction.put(DataBaseNodes.GROUP_ACTION_TYPE, GroupActionTypes.USER_ADDED_ACTION);
@@ -131,6 +140,21 @@ public class FireBaseServerApi {
                 .child(DataBaseNodes.GROUP_ACTIONS)
                 .push()
                 .setValue(addUserAction);
+    }
+
+    public void saveCancelAction(Group group, PaymentAction action) {
+        Map<String, Object> cancelAction = new HashMap<>();
+        cancelAction.put(DataBaseNodes.GROUP_ACTION_TYPE, GroupActionTypes.CANCEL_ACTION);
+        cancelAction.put(DataBaseNodes.ACTION_ID, action.getId());
+        cancelAction.put(DataBaseNodes.INSTALLATION_ID, group.getGroupInstallationId());
+        cancelAction.put(DataBaseNodes.TIME_STEMP, ServerValue.TIMESTAMP);
+
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child(group.getKey())
+                .child(DataBaseNodes.GROUP_ACTIONS)
+                .push()
+                .setValue(cancelAction);
     }
 
     public void savePaymentAction(Group group, PaymentAction paymentAction) {

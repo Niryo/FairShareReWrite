@@ -45,6 +45,7 @@ public class GroupActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private GroupDetailsView groupDetailsView;
+    private GroupActionsHistoryView  groupActionsHistoryView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +72,7 @@ public class GroupActivity extends AppCompatActivity {
         String groupId = getIntent().getStringExtra(GROUP_KEY_EXTRA);
         args.putString("groupId", groupId);
         this.groupDetailsView = new GroupDetailsView(this, this.group);
-        GroupActionsHistoryView groupActionsHistoryView =  new GroupActionsHistoryView(this.getBaseContext(), this.group);
+        groupActionsHistoryView =  new GroupActionsHistoryView(this.getBaseContext(), this.group);
         adapter.addView(groupDetailsView, getResources().getString(R.string.group_activity_tabs_group_details));
         adapter.addView(groupActionsHistoryView, getResources().getString(R.string.group_activity_tabs_group_actions_history));
         viewPager.setAdapter(adapter);
@@ -190,6 +191,7 @@ public class GroupActivity extends AppCompatActivity {
                         group.consumeGroupAction((List<IGroupAction>) data);
                         DeviceStorageManager.saveGroup(getApplicationContext(), group);
                         groupDetailsView.notifyAdapterChange();
+                        groupActionsHistoryView.notifyAdapterChange();
                     }
                 });
             }

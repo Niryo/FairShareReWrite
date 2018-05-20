@@ -76,4 +76,27 @@ public class GroupActions {
             return this.timeStamp;
         }
     }
+
+    public static class CancelAction implements IGroupAction {
+        private final String type = GroupActionTypes.CANCEL_ACTION;
+        public String actionToCancelId;
+        public String installationId;
+        public long timeStamp;
+
+        public CancelAction(String actionToCancelId, long timeStamp,String installationId) {
+            this.actionToCancelId = actionToCancelId;
+            this.installationId = installationId;
+            this.timeStamp = timeStamp;
+        }
+
+        @Override
+        public String getType() {
+            return this.type;
+        }
+
+        @Override
+        public long getTimestamp() {
+            return this.timeStamp;
+        }
+    }
 }

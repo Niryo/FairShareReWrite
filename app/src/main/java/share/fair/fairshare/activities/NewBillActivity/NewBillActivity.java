@@ -151,6 +151,7 @@ public class NewBillActivity extends AppCompatActivity {
     private void createBill() {
         if((paymentActionToEdit != null)){
             group.cancelAction(paymentActionToEdit);
+            ((AppActivity)getApplication()).cloudApi.saveCancelAction(group, paymentActionToEdit);
         }
 
         List<PaymentAction.Operation> operations = new ArrayList<>();

@@ -61,6 +61,11 @@ public class Group implements Serializable {
         addPaymentAction(paymentAction.getOpositeAction());
     }
 
+    public void makeActionUneditable(GroupActions.CancelAction cancelAction) {
+        PaymentAction action = getPaymentActionById(cancelAction.actionToCancelId);
+        action.makeActionUnEditale();
+    }
+
     public String getName() {
         return name;
     }
@@ -148,6 +153,8 @@ public class Group implements Serializable {
             } else if(groupAction.getType().equals(GroupActionTypes.NEW_PAYMENT_ACTION)){
                 Log.d("nir", "apply payment action");
                 this.addPaymentAction(((GroupActions.NewPaymentAction) groupAction).paymentAction);
+            } else if(groupAction.getType().equals(GroupActionTypes.CANCEL_ACTION)){
+                this.makeActionUneditable((GroupActions.CancelAction) groupAction);
             }
             this.lastSyncTime = groupAction.getTimestamp();
         }
